@@ -60,7 +60,7 @@ public class OtpServiceImpl implements OtpService {
 		mailSender.send(message);
 	}
 
-	@Scheduled(fixedDelay = Constants.FIXED_DELAY)
+	@Scheduled(cron = Constants.FIXED_DELAY)
 	private void cleanup() {
 		otpDetailsRepository.findAll().forEach(otp -> {
 			if (otp.getOtpTime().isAfter(LocalDateTime.now())) {

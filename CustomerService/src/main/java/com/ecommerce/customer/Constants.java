@@ -21,8 +21,8 @@ public class Constants {
 	 */
 	public static final Long OTP_VALIDITY = 60L;
 	/**
-	 *  DB cleanup process in Milliseconds.
-	 *  Current Time : 1hour
+	 *  DB cleanup process in Cron.
+	 *  Current Time : 6am everyday
 	 */
-	public static final long FIXED_DELAY = 1000*60*60*1;
+	public static final String FIXED_DELAY = "0 0 6 * * *";
 }

@@ -45,7 +45,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	
 	
 
-	@Scheduled(fixedDelay = Constants.FIXED_DELAY)
+	@Scheduled(cron = Constants.FIXED_DELAY)
 	private void cleanup() {
 		refreshTokenRepository.findAll().forEach(token -> {
 			if (token.getExpirationDate().isAfter(Instant.now())) {
