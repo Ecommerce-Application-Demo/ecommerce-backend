@@ -1,14 +1,13 @@
-# Use the official OpenJDK base image for Java 21
-FROM openjdk:21-jdk-slim
+FROM gradle:8.5.0-jdk21-alpine
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Copy the jar to the container
-COPY ./build/libs/CustomerService-0.0.1-SNAPSHOT.jar /app
+COPY gradle/wrapper /gradle/wrapper
+COPY build.gradle /app
+COPY src /app/src
+COPY settings.gradle /app
+COPY gradlew /app
 
-# Expose the port that your Spring Boot application will run on
-EXPOSE 8500
+RUN gradle build -x test --no-daemon
 
-# Specify the command to run on container startup
-CMD ["java", "-jar", "CustomerService-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "build/libs/CustomerService-0.0.1-SNAPSHOT.jar"]
