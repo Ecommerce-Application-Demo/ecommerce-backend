@@ -17,7 +17,7 @@ import com.ecommerce.customer.dto.CustomerAuthDto;
 import com.ecommerce.customer.dto.CustomerDto;
 import com.ecommerce.customer.dto.JwtTokens;
 import com.ecommerce.customer.dto.OtpDetailsDto;
-import com.ecommerce.customer.dto.StringInputDto;
+import com.ecommerce.customer.entity.StringInput;
 import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.security.JwtHelper;
 import com.ecommerce.customer.service.declaration.CustomerService;
@@ -26,11 +26,11 @@ import com.ecommerce.customer.service.declaration.OtpService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/api/auth")
-@Tag(name = "Customer Controller : REST APIs") // http://localhost:8500/myntra/swagger-ui/index.html#/
+@Tag(name = "Customer Controller : REST APIs") // http://localhost:8500/ecom/swagger-ui/index.html
 public class CustomerAuthController {
 
 	@Autowired
@@ -48,14 +48,15 @@ public class CustomerAuthController {
 
 	@PostMapping("/email")
 	@Operation(summary = "To check if email id is present in database")
-	public ResponseEntity<Boolean> customerIsPresent(@RequestBody @NotBlank StringInputDto stringInputDto) {
-		return new ResponseEntity<>(customerService.isPresent(stringInputDto), HttpStatus.OK);
+	public ResponseEntity<Boolean> customerIsPresent(@RequestBody @NotNull StringInput email) {
+		
+		return new ResponseEntity<>(customerService.isPresent(email.getInput()), HttpStatus.OK);
 	}
 
 	@PostMapping("/generate")
 	@Operation(summary = "To generate Otp for email validation")
-	public ResponseEntity<String> generateEmailOtp(@RequestBody @NotBlank StringInputDto email) {
-		Integer otp = otpService.generateOtp(email);
+	public ResponseEntity<String> generateEmailOtp(@RequestBody @NotNull StringInput email) {
+		Integer otp = otpService.generateOtp(email.getInput());
 		otpService.sendOtpByEmail(email.getInput(), otp.toString());
 		return new ResponseEntity<>(environment.getProperty("OTP.SENT") + email.getInput(), HttpStatus.OK);
 	}
@@ -107,7 +108,7 @@ public class CustomerAuthController {
 	// Get new jwt with refresh token
 	@PostMapping("/refresh-token")
 	@Operation(summary = "Get new jwt with refresh token")
-	public ResponseEntity<String> customerLoginApi(@RequestBody StringInputDto refreshToken) throws CustomerException {
+	public ResponseEntity<String> customerLoginApi(@RequestBody String refreshToken) throws CustomerException {
 		String email = refreshTokenService.tokenValidation(refreshToken);
 		return new ResponseEntity<>(jwtHelper.generateToken(email), HttpStatus.OK);
 	}
@@ -116,5 +117,10 @@ public class CustomerAuthController {
 	public String welcome(Principal principal) {
 		String customerName = customerService.welcomeService(principal.getName());
 		return "Welcome " + customerName;
+	}
+	
+	@GetMapping("/index")
+	public String index() {
+		return "Welcome to Ecommerce Application!";
 	}
 }

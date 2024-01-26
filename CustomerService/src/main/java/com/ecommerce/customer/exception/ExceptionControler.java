@@ -22,7 +22,7 @@ public class ExceptionControler {
 	Environment environment;
 
 	@ExceptionHandler
-	public ResponseEntity<String> myntraGeneralException(CustomerException ex) {
+	public ResponseEntity<String> generalException(CustomerException ex) {
 		return new ResponseEntity<>(environment.getProperty(ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
@@ -34,7 +34,7 @@ public class ExceptionControler {
 	}
 	
 	@ExceptionHandler
-	public ResponseEntity<String> generalException(Exception ex) {
+	public ResponseEntity<String> allOtherException(Exception ex) {
 		return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}

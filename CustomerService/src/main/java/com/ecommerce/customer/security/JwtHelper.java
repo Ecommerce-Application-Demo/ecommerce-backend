@@ -5,17 +5,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import com.ecommerce.customer.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtHelper {
+	
+	@Value("#{new Integer(${JWT_VALIDITY})}")
+	public int JWT_VALIDITY;
+	
+	@Value("${JWT_SECRET}")
+	public String JWT_SECRET;
 
 	public Date extractExpiration(String token) {
 		return extractClaim(token, Claims::getExpiration);
@@ -50,12 +56,12 @@ public class JwtHelper {
 
 	private String createToken(Map<String, Object> claims, String email) {
 		return Jwts.builder().setClaims(claims).setSubject(email).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + Constants.JWT_VALIDITY))
+				.setExpiration(new Date(System.currentTimeMillis() + JWT_VALIDITY))
 				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 	}
 
 	private Key getSignKey() {
-		byte[] key = Decoders.BASE64.decode(Constants.JWT_SECRET);
+		byte[] key = Decoders.BASE64.decode(JWT_SECRET);
 		return Keys.hmacShaKeyFor(key);
 	}
 }

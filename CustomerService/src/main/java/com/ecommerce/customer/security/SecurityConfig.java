@@ -23,6 +23,13 @@ public class SecurityConfig {
 
 	@Autowired
 	JwtFilter jwtFilter;
+	
+	String[] publicURL= {
+			"/api/auth/**",
+			"/actuator/**",
+			"/v3/api-docs","/swagger-ui/**","/swagger-ui.html","/swagger-resources/**","/v3/api-docs/**",
+	        "/swagger-ui/**","/swagger-ui/","/swagger-ui"
+	        };
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -43,10 +50,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(req -> req.requestMatchers("/api/auth/welcome", "/api/my/**").authenticated()
-				.requestMatchers("/api/auth/**","/v3/api-docs","/swagger-ui/**","/swagger-ui.html","/swagger-resources/**","/v3/api-docs/**",
-				        "/swagger-ui/**",
-				        "/swagger-ui/",
-				        "/swagger-ui").permitAll())
+				.requestMatchers(publicURL).permitAll())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build();

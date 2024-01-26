@@ -1,7 +1,6 @@
 package com.ecommerce.customer.service.impl;
 
 import com.ecommerce.customer.dto.CustomerDto;
-import com.ecommerce.customer.dto.StringInputDto;
 import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.repository.CustomerAuthRepository;
 import com.ecommerce.customer.repository.CustomerRepository;
@@ -12,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.ecommerce.customer.entity.CustomerAuth;
-import com.ecommerce.customer.entity.StringInput;
 import com.ecommerce.customer.entity.Customer;
 
 @Service
@@ -56,13 +53,8 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 
 	@Override
-	public Boolean isPresent(StringInputDto stringInputDto) {
-		StringInput email = new StringInput(stringInputDto.getInput());
-		if (customerRepository.findByEmail(email.getInput()).isPresent()) {
-			return true;
-		} else {
-			return false;
-		}
+	public Boolean isPresent(String email) {
+		return customerRepository.findByEmail(email).isPresent();
 	}
 
 }

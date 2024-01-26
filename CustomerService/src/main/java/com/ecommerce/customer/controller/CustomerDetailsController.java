@@ -4,7 +4,8 @@ import java.security.Principal;
 import java.util.List;
 import com.ecommerce.customer.dto.AddressDto;
 import com.ecommerce.customer.dto.CustomerDto;
-import com.ecommerce.customer.dto.StringInputDto;
+import com.ecommerce.customer.entity.StringInput;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -49,26 +50,26 @@ public class CustomerDetailsController {
 	}
 
 	@PostMapping("/logout")
-	@Operation(summary = "user logout")
-	public ResponseEntity<String> logoutApi(@RequestBody @NotBlank StringInputDto stringInputDto,
+	@Operation(summary = "user logout", description = "Need to provide current refresh token while logging out for security reason")
+	public ResponseEntity<String> logoutApi(@RequestBody @NotBlank StringInput refreshToken,
 			HttpServletRequest request) {
-		refreshTokenService.deleteToken(stringInputDto.getInput());
+		refreshTokenService.deleteToken(refreshToken.getInput());
 		logoutService.logout(request);
 		return new ResponseEntity<>(environment.getProperty("LOGGED.OUT"), HttpStatus.OK);
 	}
 
 	@PostMapping("/relogin")
 	@Operation(summary = "Password verification for already logged in user")
-	public ResponseEntity<Boolean> customerLoginApi(@RequestBody @NotBlank StringInputDto stringInputDto)
+	public ResponseEntity<Boolean> customerLoginApi(@RequestBody @NotBlank StringInput password)
 			throws CustomerException {
-		return new ResponseEntity<>(customerDetailsService.passwordVerify(stringInputDto), HttpStatus.OK);
+		return new ResponseEntity<>(customerDetailsService.passwordVerify(password.getInput()), HttpStatus.OK);
 	}
 
 	@PutMapping("/password")
 	@Operation(summary = "To change user password")
-	public ResponseEntity<Boolean> passwordChange(@RequestBody @NotBlank StringInputDto stringInputDto)
+	public ResponseEntity<Boolean> passwordChange(@RequestBody @NotBlank StringInput password)
 			throws CustomerException {
-		return new ResponseEntity<>(customerDetailsService.changePassword(stringInputDto), HttpStatus.OK);
+		return new ResponseEntity<>(customerDetailsService.changePassword(password.getInput()), HttpStatus.OK);
 	}
 
 	@GetMapping("/account")

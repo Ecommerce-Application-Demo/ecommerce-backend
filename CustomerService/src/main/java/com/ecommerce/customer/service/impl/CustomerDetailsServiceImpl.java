@@ -2,10 +2,8 @@ package com.ecommerce.customer.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.ecommerce.customer.dto.AddressDto;
 import com.ecommerce.customer.dto.CustomerDto;
-import com.ecommerce.customer.dto.StringInputDto;
 import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.repository.AddressRepository;
 import com.ecommerce.customer.repository.CustomerAuthRepository;
@@ -20,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.ecommerce.customer.entity.Address;
 import com.ecommerce.customer.entity.Customer;
 import com.ecommerce.customer.entity.CustomerAuth;
@@ -57,15 +54,15 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	}
 
 	@Override
-	public Boolean passwordVerify(StringInputDto stringInputDto) throws CustomerException {
+	public Boolean passwordVerify(String password) throws CustomerException {
 		String dbPassword = customerAuthRepository.findById(getUser()).get().getPassword();
-		return passwordEncoder.matches(stringInputDto.getInput(), dbPassword);
+		return passwordEncoder.matches(password, dbPassword);
 	}
 
 	@Override
-	public Boolean changePassword(StringInputDto stringInputDto) throws CustomerException {
+	public Boolean changePassword(String password) throws CustomerException {
 		try {
-		String newPassword = stringInputDto.getInput();
+		String newPassword = password;
 		CustomerAuth customer= customerAuthRepository.findById(getUser()).get();
 		customer.setPassword(passwordEncoder.encode(newPassword));
 		customerAuthRepository.save(customer);
