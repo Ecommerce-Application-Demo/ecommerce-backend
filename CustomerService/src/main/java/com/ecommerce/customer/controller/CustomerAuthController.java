@@ -8,11 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ecommerce.customer.dto.CustomerAuthDto;
 import com.ecommerce.customer.dto.CustomerDto;
 import com.ecommerce.customer.dto.JwtTokens;
@@ -30,6 +26,7 @@ import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin
 @Tag(name = "Customer Controller : REST APIs") // http://localhost:8500/ecom/swagger-ui/index.html
 public class CustomerAuthController {
 
