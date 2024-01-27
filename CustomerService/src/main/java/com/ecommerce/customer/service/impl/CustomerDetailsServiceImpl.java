@@ -112,7 +112,7 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	@Override
 	public AddressDto editAddress(AddressDto addressDto) throws CustomerException {
 		Address address=modelMapper.map(addressDto,Address.class);
-		if(addressRepository.equals(address.getAddId())) {
+		if(addressRepository.existsById((address.getAddId()))) {
 			addressRepository.save(address);
 		return addressDto;
 		}
