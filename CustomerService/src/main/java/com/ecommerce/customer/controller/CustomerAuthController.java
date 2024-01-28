@@ -109,7 +109,7 @@ public class CustomerAuthController {
 	}
 
 	// Get new jwt with refresh token
-	@PostMapping("/refresh-token")
+	@PostMapping("/jwt-token")
 	@Operation(summary = "Get new jwt with refresh token")
 	public ResponseEntity<String> customerLoginApi(@RequestBody String refreshToken) throws CustomerException {
 		String email = refreshTokenService.tokenValidation(refreshToken);

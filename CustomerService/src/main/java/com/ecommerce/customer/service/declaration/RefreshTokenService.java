@@ -8,5 +8,5 @@ public interface RefreshTokenService {
 
 	String tokenValidation(String refreshToken) throws CustomerException;
 
-	void deleteToken(String input);
+	void deleteToken(String input) throws CustomerException;
 }
