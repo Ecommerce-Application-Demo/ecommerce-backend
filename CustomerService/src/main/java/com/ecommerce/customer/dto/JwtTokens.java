@@ -10,4 +10,6 @@ import lombok.NoArgsConstructor;
 public class JwtTokens {
 	private String accessToken;
 	private String refreshToken;
+	private String name;
+	private String email;
 }

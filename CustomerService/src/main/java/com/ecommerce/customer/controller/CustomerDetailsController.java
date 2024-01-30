@@ -19,7 +19,7 @@ import com.ecommerce.customer.service.declaration.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/api/my")
@@ -46,8 +46,8 @@ public class CustomerDetailsController {
 
 	@PostMapping("/logout")
 	@Operation(summary = "user logout", description = "Need to provide current refresh token while logging out for security reason")
-	public ResponseEntity<String> logoutApi(@RequestBody @NotBlank StringInput refreshToken,
-			HttpServletRequest request) {
+	public ResponseEntity<String> logoutApi(@RequestBody @NotNull StringInput refreshToken,
+			HttpServletRequest request) throws CustomerException {
 		refreshTokenService.deleteToken(refreshToken.getInput());
 		logoutService.logout(request);
 		return new ResponseEntity<>(environment.getProperty("LOGGED.OUT"), HttpStatus.OK);
@@ -55,14 +55,14 @@ public class CustomerDetailsController {
 
 	@PostMapping("/relogin")
 	@Operation(summary = "Password verification for already logged in user")
-	public ResponseEntity<Boolean> customerLoginApi(@RequestBody @NotBlank StringInput password)
+	public ResponseEntity<Boolean> customerLoginApi(@RequestBody @NotNull StringInput password)
 			throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.passwordVerify(password.getInput()), HttpStatus.OK);
 	}
 
 	@PutMapping("/password")
 	@Operation(summary = "To change user password")
-	public ResponseEntity<Boolean> passwordChange(@RequestBody @NotBlank StringInput password)
+	public ResponseEntity<Boolean> passwordChange(@RequestBody @NotNull StringInput password)
 			throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.changePassword(password.getInput()), HttpStatus.OK);
 	}

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class CustomerDto {
 
 	private int userId;
-	@NotBlank(message = "Email can not be blank")
+	@NotNull(message = "Email can not be blank")
 	private String email;
 	@NotNull
 	private String name;

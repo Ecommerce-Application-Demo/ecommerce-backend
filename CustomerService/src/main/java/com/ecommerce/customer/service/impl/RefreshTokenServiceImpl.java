@@ -39,7 +39,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 			return refreshtoken.getEmail();
 		} else {
 			refreshTokenRepository.deleteById(refreshtoken.getEmail());
-			throw new CustomerException("TOKEN.INVALID", HttpStatus.BAD_REQUEST);
+			throw new CustomerException("TOKEN.EXPIRED", HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -55,9 +55,11 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	}
 
 	@Override
-	public void deleteToken(String input) {
+	public void deleteToken(String input) throws CustomerException {
 		if(refreshTokenRepository.findByToken(input).isPresent()) {
 		refreshTokenRepository.deleteById(input);
+		}else {
+			throw new CustomerException("TOKEN.NOT.FOUND",HttpStatus.BAD_REQUEST);
 		}
 	}
 }

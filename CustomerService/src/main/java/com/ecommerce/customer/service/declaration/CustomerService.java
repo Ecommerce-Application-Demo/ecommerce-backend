@@ -2,8 +2,7 @@ package com.ecommerce.customer.service.declaration;
 
 import com.ecommerce.customer.dto.CustomerDto;
 import com.ecommerce.customer.exception.CustomerException;
-
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public interface CustomerService {
 
@@ -11,6 +10,6 @@ public interface CustomerService {
 
 	String welcomeService(String email);
 
-	Boolean isPresent(@NotBlank String input);
+	Boolean isPresent(@NotNull String input);
 
 }

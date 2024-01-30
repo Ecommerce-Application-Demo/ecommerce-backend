@@ -63,7 +63,11 @@ public class CustomerAuthController {
 	public ResponseEntity<String> validateEmailOtp(@RequestBody OtpDetailsDto otpDetailsDto) {
 		boolean validated = otpService.validateOtp(otpDetailsDto);
 		if (validated) {
-			return new ResponseEntity<>(environment.getProperty("OTP.VALIDATED"), HttpStatus.OK);
+			if(customerService.isPresent(otpDetailsDto.getEmail())) {
+				return new ResponseEntity<>(environment.getProperty("OTP.VALIDATED.REGISTERED"), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(environment.getProperty("OTP.VALIDATED.NOT.REGISTERED"), HttpStatus.OK);
+			}
 		} else {
 			return new ResponseEntity<>(environment.getProperty("OTP.INVALID"), HttpStatus.BAD_REQUEST);
 		}
@@ -80,7 +84,8 @@ public class CustomerAuthController {
 				.isAuthenticated()) {
 			String jwtToken = jwtHelper.generateToken(customerDto.getEmail());
 			String refreshToken = refreshTokenService.getRefreshToken(customerDto.getEmail());
-			return new ResponseEntity<>(new JwtTokens(jwtToken, refreshToken), HttpStatus.OK);
+			JwtTokens response = new JwtTokens(jwtToken, refreshToken,customerDto.getName(),customerDto.getEmail());
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(environment.getProperty("INVALID.CREDENTIAL"), HttpStatus.BAD_REQUEST);
 		}
@@ -96,14 +101,15 @@ public class CustomerAuthController {
 				.isAuthenticated()) {
 			String jwtToken = jwtHelper.generateToken(customerAuthDto.getEmail());
 			String refreshToken = refreshTokenService.getRefreshToken(customerAuthDto.getEmail());
-			return new ResponseEntity<>(new JwtTokens(jwtToken, refreshToken), HttpStatus.OK);
+			JwtTokens response= new JwtTokens(jwtToken, refreshToken,customerService.welcomeService(customerAuthDto.getEmail()),customerAuthDto.getEmail());
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(environment.getProperty("INVALID.CREDENTIAL"), HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	// Get new jwt with refresh token
-	@PostMapping("/refresh-token")
+	@PostMapping("/jwt-token")
 	@Operation(summary = "Get new jwt with refresh token")
 	public ResponseEntity<String> customerLoginApi(@RequestBody String refreshToken) throws CustomerException {
 		String email = refreshTokenService.tokenValidation(refreshToken);
