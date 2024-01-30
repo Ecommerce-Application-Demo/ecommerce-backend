@@ -34,12 +34,12 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	@Override
 	public String tokenValidation(String token) throws CustomerException {
 		JwtRefreshToken refreshtoken = refreshTokenRepository.findByToken(token)
-				.orElseThrow(() -> new CustomerException("TOKEN.NOT.FOUND", HttpStatus.NOT_FOUND));
+				.orElseThrow(() -> new CustomerException("TOKEN.NOT.FOUND", HttpStatus.BAD_REQUEST));
 		if (refreshtoken.getExpirationDate().isAfter(Instant.now())) {
 			return refreshtoken.getEmail();
 		} else {
 			refreshTokenRepository.deleteById(refreshtoken.getEmail());
-			throw new CustomerException("TOKEN.INVALID", HttpStatus.BAD_REQUEST);
+			throw new CustomerException("TOKEN.EXPIRED", HttpStatus.BAD_REQUEST);
 		}
 	}
 	
@@ -59,7 +59,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		if(refreshTokenRepository.findByToken(input).isPresent()) {
 		refreshTokenRepository.deleteById(input);
 		}else {
-			throw new CustomerException("TOKEN.NOT.FOUND",HttpStatus.NOT_FOUND);
+			throw new CustomerException("TOKEN.NOT.FOUND",HttpStatus.BAD_REQUEST);
 		}
 	}
 }
