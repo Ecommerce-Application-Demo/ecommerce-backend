@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+
 import com.ecommerce.customer.service.CustomUserDetailsService;
 import java.io.IOException;
 import jakarta.servlet.FilterChain;
@@ -26,6 +28,8 @@ public class JwtFilter extends OncePerRequestFilter {
 	private CustomUserDetailsService customUserDetailsService;
 	@Autowired
     BlockedJwtRepo blockedJwt;
+	@Autowired
+	HandlerExceptionResolver handlerExceptionResolver;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -37,9 +41,8 @@ public class JwtFilter extends OncePerRequestFilter {
 			token = authHeader.substring(7);
 			try {
 				username = jwtHelper.extractUserName(token);
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println(e.getMessage());
+			}catch (Exception ex) {
+				handlerExceptionResolver.resolveException(request, response, null, ex);
 			}
 		}
 

@@ -53,7 +53,8 @@ public class SecurityConfig {
 				.requestMatchers(publicURL).permitAll())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
-				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class).build();
+				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+				.build();
 	}
 
     @Bean

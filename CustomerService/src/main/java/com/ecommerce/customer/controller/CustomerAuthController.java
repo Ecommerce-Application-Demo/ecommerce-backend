@@ -123,7 +123,8 @@ public class CustomerAuthController {
 	}
 	
 	@GetMapping("/index")
-	public String index() {
-		return "Welcome to Ecommerce Application!";
+	public String index() throws Exception {
+		throw new Exception("hello world");
+		//return "Welcome to Ecommerce Application!";
 	}
 }
