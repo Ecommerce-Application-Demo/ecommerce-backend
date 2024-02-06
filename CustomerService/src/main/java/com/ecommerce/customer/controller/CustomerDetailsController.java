@@ -101,8 +101,8 @@ public class CustomerDetailsController {
 	
 	@DeleteMapping("/address/{addId}")
 	@Operation(summary = "To delete user address details")
-	public ResponseEntity<String> deleteAddress(@PathVariable int addId) throws CustomerException {
-		customerDetailsService.deleteAddress(addId);
+	public ResponseEntity<String> deleteAddress(@PathVariable("addId") String addId) throws CustomerException {
+		customerDetailsService.deleteAddress(Integer.parseInt(addId));
 		return new ResponseEntity<>(environment.getProperty("ADDRESS.DELETED"), HttpStatus.OK);
 	}
 }

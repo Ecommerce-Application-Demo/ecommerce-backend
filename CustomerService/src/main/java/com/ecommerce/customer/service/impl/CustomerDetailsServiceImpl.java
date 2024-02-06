@@ -130,6 +130,7 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	public AddressDto editAddress(AddressDto addressDto) throws CustomerException {
 		Address address=modelMapper.map(addressDto,Address.class);
 		if(addressRepository.existsById((address.getAddId()))) {
+			address.setUserIdEmail(getUser());
 			addressRepository.save(address);
 			if(addressDto.isDefault()) {
 				DefaultAddress add= new DefaultAddress(getUser(),address.getAddId());
@@ -146,9 +147,6 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	public void deleteAddress(int addId) throws CustomerException {
 		if(addressRepository.existsById(addId)) {
 			addressRepository.deleteById(addId);
-			if(defaultAddressRepository.findById(getUser()).get().getAddId()==addId) {
-			defaultAddressRepository.deleteById(getUser());
-			}
 		}
 		else {
 			throw new CustomerException("INVALID.ADDRESS.ID", HttpStatus.NOT_FOUND);
