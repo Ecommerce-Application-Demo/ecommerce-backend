@@ -10,7 +10,7 @@ public class AddressDto {
 	private int addId;
 	@NotNull
 	private String name;
-	private String emailId;
+	private Integer phoneNumber;
 	private String addressLine1;
 	@NotNull
 	private Long pincode;
@@ -18,5 +18,6 @@ public class AddressDto {
 	private String locality;
 	private String city;
 	private String addressType;
+	private boolean isDefault = false;
 
 }

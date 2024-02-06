@@ -115,6 +115,8 @@ public class CustomerAuthController {
 		String email = refreshTokenService.tokenValidation(refreshToken);
 		return new ResponseEntity<>(jwtHelper.generateToken(email), HttpStatus.OK);
 	}
+	
+	
 
 	@GetMapping("/welcome")
 	public String welcome(Principal principal) {
@@ -124,7 +126,6 @@ public class CustomerAuthController {
 	
 	@GetMapping("/index")
 	public String index() throws Exception {
-		throw new Exception("hello world");
-		//return "Welcome to Ecommerce Application!";
+		return "Welcome to Ecommerce Application!";
 	}
 }

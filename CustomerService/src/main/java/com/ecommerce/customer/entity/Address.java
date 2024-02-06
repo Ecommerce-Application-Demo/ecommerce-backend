@@ -25,13 +25,14 @@ public class Address {
 	private int addId;
 	private String userIdEmail;
 	private String name;
-	private String addressEmail;
+	private Integer phoneNumber;
 	private String addressLine1;
 	private String pincode;
 	private String state;
 	private String locality;
 	private String city;
 	private String addressType;
+
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private Customer addCustomer;

@@ -1,11 +1,9 @@
 package com.ecommerce.customer.controller;
 
 import java.security.Principal;
-import java.util.List;
 import com.ecommerce.customer.dto.AddressDto;
 import com.ecommerce.customer.dto.CustomerDto;
 import com.ecommerce.customer.entity.StringInput;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -87,13 +85,24 @@ public class CustomerDetailsController {
 
 	@GetMapping("/addresses")
 	@Operation(summary = "To get all user addresses for an account")
-	public ResponseEntity<List<AddressDto>> getAddress() throws CustomerException {
-		return new ResponseEntity<>(customerDetailsService.getAddress(), HttpStatus.OK);
+	public ResponseEntity<?> getAddress() throws CustomerException {
+		if(customerDetailsService.getAddress().isEmpty()) {
+			return new ResponseEntity<>(environment.getProperty("NO_ADDRESS_FOUND"), HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(customerDetailsService.getAddress(), HttpStatus.OK); 
+		}
 	}
 
 	@PutMapping("/address")
 	@Operation(summary = "To edit user address details")
 	public ResponseEntity<AddressDto> editAddress(@RequestBody AddressDto addressDto) throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.editAddress(addressDto), HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/address/{addId}")
+	@Operation(summary = "To delete user address details")
+	public ResponseEntity<String> deleteAddress(@PathVariable int addId) throws CustomerException {
+		customerDetailsService.deleteAddress(addId);
+		return new ResponseEntity<>(environment.getProperty("ADDRESS.DELETED"), HttpStatus.OK);
 	}
 }
