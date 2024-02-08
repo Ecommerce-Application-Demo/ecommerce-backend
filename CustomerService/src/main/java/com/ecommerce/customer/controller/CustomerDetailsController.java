@@ -17,6 +17,7 @@ import com.ecommerce.customer.service.declaration.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 @RestController
@@ -73,13 +74,13 @@ public class CustomerDetailsController {
 
 	@PutMapping("/account")
 	@Operation(summary = "To edit user acc details")
-	public ResponseEntity<CustomerDto> editDetails(@RequestBody CustomerDto customerDto) throws CustomerException {
+	public ResponseEntity<CustomerDto> editDetails(@RequestBody @Valid CustomerDto customerDto) throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.editDetails(customerDto), HttpStatus.OK);
 	}
 
 	@PostMapping("/address")
 	@Operation(summary = "To add user addresses")
-	public ResponseEntity<AddressDto> addAddress(@RequestBody AddressDto addressDto) throws CustomerException {
+	public ResponseEntity<AddressDto> addAddress(@RequestBody @Valid AddressDto addressDto) throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.addAddress(addressDto), HttpStatus.OK);
 	}
 
@@ -95,13 +96,13 @@ public class CustomerDetailsController {
 
 	@PutMapping("/address")
 	@Operation(summary = "To edit user address details")
-	public ResponseEntity<AddressDto> editAddress(@RequestBody AddressDto addressDto) throws CustomerException {
+	public ResponseEntity<AddressDto> editAddress(@RequestBody @Valid AddressDto addressDto) throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.editAddress(addressDto), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/address/{addId}")
 	@Operation(summary = "To delete user address details")
-	public ResponseEntity<String> deleteAddress(@PathVariable("addId") String addId) throws CustomerException {
+	public ResponseEntity<String> deleteAddress(@PathVariable("addId") @NotNull String addId) throws CustomerException {
 		customerDetailsService.deleteAddress(Integer.parseInt(addId));
 		return new ResponseEntity<>(environment.getProperty("ADDRESS.DELETED"), HttpStatus.OK);
 	}

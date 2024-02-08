@@ -30,7 +30,7 @@ public class Customer {
 	private String name;
 	@Transient
 	private String password;
-	private Long phoneNumber;
+	private String phoneNumber;
 	private String gender;
 	@OneToMany(mappedBy = "addCustomer" ,cascade = CascadeType.ALL,orphanRemoval = true)
 	private List<Address> address;

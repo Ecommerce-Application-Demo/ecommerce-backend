@@ -25,7 +25,7 @@ public class Address {
 	private int addId;
 	private String userIdEmail;
 	private String name;
-	private Integer phoneNumber;
+	private String phoneNumber;
 	private String addressLine1;
 	private String pincode;
 	private String state;
