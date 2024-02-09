@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import com.ecommerce.customer.repository.CustomerAuthRepository;
 import com.ecommerce.customer.security.CustomUserDetails;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,8 +17,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Autowired
     CustomerAuthRepository customerAuthRepository;
-	@Autowired
-	ModelMapper modelMapper;
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

@@ -1,11 +1,9 @@
 package com.ecommerce.customer.controller;
 
 import java.security.Principal;
-import java.util.List;
 import com.ecommerce.customer.dto.AddressDto;
 import com.ecommerce.customer.dto.CustomerDto;
 import com.ecommerce.customer.entity.StringInput;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -19,6 +17,7 @@ import com.ecommerce.customer.service.declaration.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 @RestController
@@ -75,25 +74,36 @@ public class CustomerDetailsController {
 
 	@PutMapping("/account")
 	@Operation(summary = "To edit user acc details")
-	public ResponseEntity<CustomerDto> editDetails(@RequestBody CustomerDto customerDto) throws CustomerException {
+	public ResponseEntity<CustomerDto> editDetails(@RequestBody @Valid CustomerDto customerDto) throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.editDetails(customerDto), HttpStatus.OK);
 	}
 
 	@PostMapping("/address")
 	@Operation(summary = "To add user addresses")
-	public ResponseEntity<AddressDto> addAddress(@RequestBody AddressDto addressDto) throws CustomerException {
+	public ResponseEntity<AddressDto> addAddress(@RequestBody @Valid AddressDto addressDto) throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.addAddress(addressDto), HttpStatus.OK);
 	}
 
 	@GetMapping("/addresses")
 	@Operation(summary = "To get all user addresses for an account")
-	public ResponseEntity<List<AddressDto>> getAddress() throws CustomerException {
-		return new ResponseEntity<>(customerDetailsService.getAddress(), HttpStatus.OK);
+	public ResponseEntity<?> getAddress() throws CustomerException {
+		if(customerDetailsService.getAddress().isEmpty()) {
+			return new ResponseEntity<>(environment.getProperty("NO_ADDRESS_FOUND"), HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(customerDetailsService.getAddress(), HttpStatus.OK); 
+		}
 	}
 
 	@PutMapping("/address")
 	@Operation(summary = "To edit user address details")
-	public ResponseEntity<AddressDto> editAddress(@RequestBody AddressDto addressDto) throws CustomerException {
+	public ResponseEntity<AddressDto> editAddress(@RequestBody @Valid AddressDto addressDto) throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.editAddress(addressDto), HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/address/{addId}")
+	@Operation(summary = "To delete user address details")
+	public ResponseEntity<String> deleteAddress(@PathVariable("addId") @NotNull String addId) throws CustomerException {
+		customerDetailsService.deleteAddress(Integer.parseInt(addId));
+		return new ResponseEntity<>(environment.getProperty("ADDRESS.DELETED"), HttpStatus.OK);
 	}
 }

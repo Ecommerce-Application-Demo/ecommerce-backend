@@ -1,6 +1,5 @@
 package com.ecommerce.customer.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import com.ecommerce.customer.dto.AddressDto;
 import com.ecommerce.customer.dto.CustomerDto;
@@ -8,6 +7,7 @@ import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.repository.AddressRepository;
 import com.ecommerce.customer.repository.CustomerAuthRepository;
 import com.ecommerce.customer.repository.CustomerRepository;
+import com.ecommerce.customer.repository.DefaultAddressRepository;
 import com.ecommerce.customer.service.declaration.CustomerDetailsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ecommerce.customer.entity.Address;
 import com.ecommerce.customer.entity.Customer;
 import com.ecommerce.customer.entity.CustomerAuth;
+import com.ecommerce.customer.entity.DefaultAddress;
 
 @Service
 @Transactional
@@ -36,6 +37,8 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	PasswordEncoder passwordEncoder;
 	@Autowired
     AddressRepository addressRepository;
+	@Autowired
+	DefaultAddressRepository defaultAddressRepository;
 	
 	@Override
 	public String getUser() throws CustomerException {
@@ -73,25 +76,6 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	}
 
 	@Override
-	public AddressDto addAddress(AddressDto addressDto) throws CustomerException {
-		Address address=modelMapper.map(addressDto,Address.class);
-		address.setUserIdEmail(getUser());
-		address.setAddCustomer(customerRepository.findByEmail(getUser()).get());
-		address= addressRepository.save(address);
-		return modelMapper.map(address, AddressDto.class);
-	}
-
-	@Override
-	public List<AddressDto> getAddress() throws CustomerException {
-		List<Address> address= addressRepository.findAllByUserIdEmail(getUser());
-		List<AddressDto> addDto=new ArrayList<>();
-		for (Address address2 : address) {
-			addDto.add(modelMapper.map(address2,AddressDto.class));
-		}
-		return addDto;
-	}
-
-	@Override
 	public Boolean deleteAcc() throws CustomerException {
 		customerRepository.delete(customerRepository.findByEmail(getUser()).get());
 		return true;
@@ -108,13 +92,61 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 			throw new CustomerException("INVALID.USER.ID", HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@Override
+	public AddressDto addAddress(AddressDto addressDto) throws CustomerException {
+		Address address=modelMapper.map(addressDto,Address.class);
+		String user=getUser();
+		address.setUserIdEmail(user);
+		address.setAddCustomer(customerRepository.findByEmail(user).get());
+		address= addressRepository.save(address);
+		if(addressDto.isDefault() || defaultAddressRepository.findById(user).isEmpty()) {
+			DefaultAddress add= new DefaultAddress(user,address.getAddId());
+			defaultAddressRepository.save(add);
+		}
+		
+		return modelMapper.map(address, AddressDto.class);
+	}
+
+	@Override
+	public List getAddress() throws CustomerException {
+		String user=getUser();
+		List<Address> address= addressRepository.findAllByUserIdEmail(user);
+		if(address.isEmpty())
+			return address;
+		List<AddressDto> addDto;
+		int id=defaultAddressRepository.findById(user).get().getAddId();
+		addDto= address.stream()
+			   .map(add-> modelMapper.map(add,AddressDto.class)) 
+			   .map(add2-> { if(add2.getAddId()==id){ 
+				   				add2.setDefault(true);
+				   				}
+			   					return add2;
+			   			   }).toList();
+		return addDto;
+	}
 
 	@Override
 	public AddressDto editAddress(AddressDto addressDto) throws CustomerException {
 		Address address=modelMapper.map(addressDto,Address.class);
 		if(addressRepository.existsById((address.getAddId()))) {
+			address.setUserIdEmail(getUser());
 			addressRepository.save(address);
+			if(addressDto.isDefault()) {
+				DefaultAddress add= new DefaultAddress(getUser(),address.getAddId());
+				defaultAddressRepository.save(add);
+			}
 		return addressDto;
+		}
+		else {
+			throw new CustomerException("INVALID.ADDRESS.ID", HttpStatus.NOT_FOUND);
+		}
+	}
+
+	@Override
+	public void deleteAddress(int addId) throws CustomerException {
+		if(addressRepository.existsById(addId)) {
+			addressRepository.deleteById(addId);
 		}
 		else {
 			throw new CustomerException("INVALID.ADDRESS.ID", HttpStatus.NOT_FOUND);
