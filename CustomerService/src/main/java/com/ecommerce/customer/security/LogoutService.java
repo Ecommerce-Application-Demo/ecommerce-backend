@@ -37,7 +37,7 @@ public class LogoutService {
 	}
 
 	@Scheduled(cron = Constants.FIXED_DELAY)
-	private void cleanup() {
+	void cleanup() {
 		blockedJwtRepo.findAll().forEach(token -> {
 			if (token.getExpirationTime().before(new Date())) {
 				blockedJwtRepo.delete(token);

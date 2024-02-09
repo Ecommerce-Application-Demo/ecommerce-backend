@@ -63,7 +63,7 @@ public class OtpServiceImpl implements OtpService {
 	}
 
 	@Scheduled(cron = Constants.FIXED_DELAY)
-	private void cleanup() {
+	void cleanup() {
 		otpDetailsRepository.findAll().forEach(otp -> {
 			if (otp.getOtpTime().isAfter(LocalDateTime.now())) {
 				otpDetailsRepository.delete(otp);

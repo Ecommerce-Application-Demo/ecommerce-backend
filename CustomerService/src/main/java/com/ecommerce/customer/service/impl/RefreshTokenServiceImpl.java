@@ -42,17 +42,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 			throw new CustomerException("TOKEN.EXPIRED", HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	
-
-	@Scheduled(cron = Constants.FIXED_DELAY)
-	private void cleanup() {
-		refreshTokenRepository.findAll().forEach(token -> {
-			if (token.getExpirationDate().isAfter(Instant.now())) {
-				refreshTokenRepository.delete(token);
-			}
-		});
-	}
 
 	@Override
 	public void deleteToken(String input) throws CustomerException {
@@ -61,5 +50,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		}else {
 			throw new CustomerException("TOKEN.NOT.FOUND",HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@Scheduled(cron = Constants.FIXED_DELAY)
+	void cleanup() {
+		refreshTokenRepository.findAll().forEach(token -> {
+			if (token.getExpirationDate().isAfter(Instant.now())) {
+				refreshTokenRepository.delete(token);
+			}
+		});
 	}
 }

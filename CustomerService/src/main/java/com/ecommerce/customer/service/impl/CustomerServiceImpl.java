@@ -8,9 +8,12 @@ import com.ecommerce.customer.service.declaration.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import com.ecommerce.customer.entity.CustomerAuth;
 import com.ecommerce.customer.entity.Customer;
 
@@ -55,6 +58,13 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Boolean isPresent(String email) {
 		return customerRepository.findByEmail(email).isPresent();
+	}
+	
+
+	@Scheduled(fixedDelay = 1000*60*5)
+	 void renderRunner() {
+		RestTemplate restTemplate= new RestTemplate();
+		restTemplate.getForEntity("https://ecommerce-backend-dev.onrender.com/user/api/auth/index",String.class);
 	}
 
 }
