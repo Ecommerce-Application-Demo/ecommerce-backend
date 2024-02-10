@@ -1,6 +1,8 @@
 package com.ecommerce.customer.controller;
 
 import java.security.Principal;
+import java.util.List;
+
 import com.ecommerce.customer.dto.AddressDto;
 import com.ecommerce.customer.dto.CustomerDto;
 import com.ecommerce.customer.entity.StringInput;
@@ -86,12 +88,8 @@ public class CustomerDetailsController {
 
 	@GetMapping("/addresses")
 	@Operation(summary = "To get all user addresses for an account")
-	public ResponseEntity<?> getAddress() throws CustomerException {
-		if(customerDetailsService.getAddress().isEmpty()) {
-			return new ResponseEntity<>(environment.getProperty("NO_ADDRESS_FOUND"), HttpStatus.OK);
-		}else {
-			return new ResponseEntity<>(customerDetailsService.getAddress(), HttpStatus.OK); 
-		}
+	public ResponseEntity<List<AddressDto>> getAddress() throws CustomerException {
+		return new ResponseEntity<>(customerDetailsService.getAddress(), HttpStatus.OK);
 	}
 
 	@PutMapping("/address")

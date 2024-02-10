@@ -12,7 +12,7 @@ public interface CustomerDetailsService {
 	Boolean passwordVerify(String password) throws CustomerException;
 	Boolean changePassword(String password) throws CustomerException;
 	String getUser() throws CustomerException;
-	List getAddress() throws CustomerException;
+	List<AddressDto> getAddress() throws CustomerException;
 	AddressDto addAddress(AddressDto addressDto) throws CustomerException;
 	Boolean deleteAcc() throws CustomerException;
 	CustomerDto editDetails(CustomerDto customerDto)throws CustomerException;

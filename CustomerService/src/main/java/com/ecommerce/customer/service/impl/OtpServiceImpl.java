@@ -7,6 +7,9 @@ import com.ecommerce.customer.Constants;
 import com.ecommerce.customer.dto.OtpDetailsDto;
 import com.ecommerce.customer.repository.OtpDetailsRepository;
 import com.ecommerce.customer.service.declaration.OtpService;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.ecommerce.customer.entity.OtpDetails;
 
 @Service
+@Slf4j
 public class OtpServiceImpl implements OtpService {
 	
 	@Value("#{new Integer(${OTP_VALIDITY})}")
@@ -67,6 +71,7 @@ public class OtpServiceImpl implements OtpService {
 		otpDetailsRepository.findAll().forEach(otp -> {
 			if (otp.getOtpTime().isAfter(LocalDateTime.now())) {
 				otpDetailsRepository.delete(otp);
+				log.info("Otp Details Repo cleanup executed.");
 			}
 		});
 	}

@@ -6,6 +6,9 @@ import com.ecommerce.customer.Constants;
 import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.repository.RefreshTokenRepository;
 import com.ecommerce.customer.service.declaration.RefreshTokenService;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.ecommerce.customer.entity.JwtRefreshToken;
 
 @Service
+@Slf4j
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 	
 	@Value("#{new Integer(${REFRESH_TOKEN_VALIDITY})}")
@@ -57,6 +61,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		refreshTokenRepository.findAll().forEach(token -> {
 			if (token.getExpirationDate().isAfter(Instant.now())) {
 				refreshTokenRepository.delete(token);
+				log.info("Refresh Token Repo cleanup executed.");
 			}
 		});
 	}

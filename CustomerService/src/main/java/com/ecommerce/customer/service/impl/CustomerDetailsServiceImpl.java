@@ -1,5 +1,6 @@
 package com.ecommerce.customer.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.ecommerce.customer.dto.AddressDto;
 import com.ecommerce.customer.dto.CustomerDto;
@@ -109,12 +110,12 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	}
 
 	@Override
-	public List getAddress() throws CustomerException {
+	public List<AddressDto> getAddress() throws CustomerException {
 		String user=getUser();
 		List<Address> address= addressRepository.findAllByUserIdEmail(user);
+		List<AddressDto> addDto=new ArrayList<>();
 		if(address.isEmpty())
-			return address;
-		List<AddressDto> addDto;
+			return addDto;
 		int id=defaultAddressRepository.findById(user).get().getAddId();
 		addDto= address.stream()
 			   .map(add-> modelMapper.map(add,AddressDto.class)) 
