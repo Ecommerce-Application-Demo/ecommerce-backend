@@ -63,7 +63,7 @@ public class CustomerDetailsController {
 
 	@PutMapping("/password")
 	@Operation(summary = "To change user password")
-	public ResponseEntity<Boolean> passwordChange(@RequestBody @NotNull StringInput password)
+	public ResponseEntity<Boolean> passwordChange(@RequestBody @NotNull @Valid StringInput password)
 			throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.changePassword(password.getInput()), HttpStatus.OK);
 	}
@@ -76,7 +76,7 @@ public class CustomerDetailsController {
 
 	@PutMapping("/account")
 	@Operation(summary = "To edit user acc details")
-	public ResponseEntity<CustomerDto> editDetails(@RequestBody @Valid CustomerDto customerDto) throws CustomerException {
+	public ResponseEntity<CustomerDto> editDetails(@RequestBody CustomerDto customerDto) throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.editDetails(customerDto), HttpStatus.OK);
 	}
 

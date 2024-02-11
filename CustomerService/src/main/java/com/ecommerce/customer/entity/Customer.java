@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import org.springframework.data.annotation.Transient;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,9 +32,9 @@ public class Customer {
 	private String password;
 	private String phoneNumber;
 	private String gender;
-	@OneToMany(mappedBy = "addCustomer" ,cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToMany(mappedBy = "addCustomer" ,cascade = CascadeType.ALL)
 	private List<Address> address;
-	@OneToOne(mappedBy = "authCustomer",cascade = CascadeType.ALL,orphanRemoval = true)
+	@OneToOne(mappedBy = "authCustomer",cascade = CascadeType.ALL)
 	private CustomerAuth customerAuth;
 	
 
