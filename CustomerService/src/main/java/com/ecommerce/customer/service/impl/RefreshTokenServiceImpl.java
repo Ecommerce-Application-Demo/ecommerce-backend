@@ -6,9 +6,7 @@ import com.ecommerce.customer.Constants;
 import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.repository.RefreshTokenRepository;
 import com.ecommerce.customer.service.declaration.RefreshTokenService;
-
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -34,32 +32,38 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		refreshTokenRepository.save(newToken);
 		return newToken.getToken();
 	}
+	
+	public JwtRefreshToken retrieveTokenFromDb(String token) throws CustomerException{
+		return refreshTokenRepository.findByToken(token)
+				.orElseThrow(() -> new CustomerException("TOKEN.NOT.FOUND", HttpStatus.BAD_REQUEST));
+	}
+	
+	@Override
+	public Instant extractExpiration(String token) throws CustomerException {
+		return retrieveTokenFromDb(token).getExpirationDate();
+	}
 
 	@Override
 	public String tokenValidation(String token) throws CustomerException {
-		JwtRefreshToken refreshtoken = refreshTokenRepository.findByToken(token)
-				.orElseThrow(() -> new CustomerException("TOKEN.NOT.FOUND", HttpStatus.BAD_REQUEST));
+		JwtRefreshToken refreshtoken=retrieveTokenFromDb(token);
 		if (refreshtoken.getExpirationDate().isAfter(Instant.now())) {
 			return refreshtoken.getEmail();
 		} else {
-			refreshTokenRepository.deleteById(refreshtoken.getEmail());
+			refreshTokenRepository.deleteById(refreshtoken.getToken());
 			throw new CustomerException("TOKEN.EXPIRED", HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@Override
 	public void deleteToken(String input) throws CustomerException {
-		if(refreshTokenRepository.findByToken(input).isPresent()) {
+		retrieveTokenFromDb(input);
 		refreshTokenRepository.deleteById(input);
-		}else {
-			throw new CustomerException("TOKEN.NOT.FOUND",HttpStatus.BAD_REQUEST);
-		}
 	}
 	
 	@Scheduled(cron = Constants.FIXED_DELAY)
 	void cleanup() {
 		refreshTokenRepository.findAll().forEach(token -> {
-			if (token.getExpirationDate().isAfter(Instant.now())) {
+			if (token.getExpirationDate().isBefore(Instant.now())) {
 				refreshTokenRepository.delete(token);
 				log.info("Refresh Token Repo cleanup executed.");
 			}

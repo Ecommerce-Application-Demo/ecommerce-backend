@@ -1,5 +1,6 @@
 package com.ecommerce.customer.service.declaration;
 
+import java.time.Instant;
 import com.ecommerce.customer.exception.CustomerException;
 
 public interface RefreshTokenService {
@@ -9,4 +10,6 @@ public interface RefreshTokenService {
 	String tokenValidation(String refreshToken) throws CustomerException;
 
 	void deleteToken(String input) throws CustomerException;
+
+	Instant extractExpiration(String token) throws CustomerException;
 }

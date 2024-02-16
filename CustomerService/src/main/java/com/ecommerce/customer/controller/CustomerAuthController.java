@@ -13,6 +13,7 @@ import com.ecommerce.customer.dto.CustomerAuthDto;
 import com.ecommerce.customer.dto.CustomerDto;
 import com.ecommerce.customer.dto.JwtTokens;
 import com.ecommerce.customer.dto.OtpDetailsDto;
+import com.ecommerce.customer.entity.JwtRefreshToken;
 import com.ecommerce.customer.entity.StringInput;
 import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.security.JwtHelper;
@@ -84,7 +85,7 @@ public class CustomerAuthController {
 				.isAuthenticated()) {
 			String jwtToken = jwtHelper.generateToken(customerDto.getEmail());
 			String refreshToken = refreshTokenService.getRefreshToken(customerDto.getEmail());
-			JwtTokens response = new JwtTokens(jwtToken, refreshToken,customerDto.getName(),customerDto.getEmail());
+			JwtTokens response= new JwtTokens(jwtToken, refreshToken,refreshTokenService.extractExpiration(refreshToken),customerDto.getName(),customerDto.getEmail());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(environment.getProperty("INVALID.CREDENTIAL"), HttpStatus.BAD_REQUEST);
@@ -95,13 +96,13 @@ public class CustomerAuthController {
 	@PostMapping("/login")
 	@Operation(summary = "Login with user Credentials")
 	public ResponseEntity<Object> customerLoginApi(@Valid @RequestBody CustomerAuthDto customerAuthDto)
-			throws BadCredentialsException {
+			throws BadCredentialsException, CustomerException {
 		if (authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(customerAuthDto.getEmail(), customerAuthDto.getPassword()))
 				.isAuthenticated()) {
 			String jwtToken = jwtHelper.generateToken(customerAuthDto.getEmail());
 			String refreshToken = refreshTokenService.getRefreshToken(customerAuthDto.getEmail());
-			JwtTokens response= new JwtTokens(jwtToken, refreshToken,customerService.welcomeService(customerAuthDto.getEmail()),customerAuthDto.getEmail());
+			JwtTokens response= new JwtTokens(jwtToken, refreshToken,refreshTokenService.extractExpiration(refreshToken),customerService.welcomeService(customerAuthDto.getEmail()),customerAuthDto.getEmail());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(environment.getProperty("INVALID.CREDENTIAL"), HttpStatus.BAD_REQUEST);
@@ -111,8 +112,8 @@ public class CustomerAuthController {
 	// Get new jwt with refresh token
 	@PostMapping("/jwt-token")
 	@Operation(summary = "Get new jwt with refresh token")
-	public ResponseEntity<String> customerLoginApi(@RequestBody String refreshToken) throws CustomerException {
-		String email = refreshTokenService.tokenValidation(refreshToken);
+	public ResponseEntity<String> customerLoginApi(@RequestBody StringInput refreshToken) throws CustomerException {
+		String email = refreshTokenService.tokenValidation(refreshToken.getInput());
 		return new ResponseEntity<>(jwtHelper.generateToken(email), HttpStatus.OK);
 	}
 	
