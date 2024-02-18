@@ -49,7 +49,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		if (refreshtoken.getExpirationDate().isAfter(Instant.now())) {
 			return refreshtoken.getEmail();
 		} else {
-			refreshTokenRepository.deleteById(refreshtoken.getToken());
 			throw new CustomerException("TOKEN.EXPIRED", HttpStatus.BAD_REQUEST);
 		}
 	}
