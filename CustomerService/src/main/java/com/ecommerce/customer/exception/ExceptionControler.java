@@ -2,6 +2,8 @@ package com.ecommerce.customer.exception;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +79,12 @@ public class ExceptionControler {
 	public ResponseEntity<String> jwtSignatureException(SignatureException ex) {
 		log.warn(ex.getMessage());
 		return new ResponseEntity<>(environment.getProperty("JWT.WRONG.SIGNATURE"), HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler
+	public ResponseEntity<String> messagingException(MessagingException ex) {
+		log.warn(ex.getMessage());
+		return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 }

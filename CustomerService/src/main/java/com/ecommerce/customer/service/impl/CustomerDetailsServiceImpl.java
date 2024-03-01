@@ -96,8 +96,7 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	
 	@Override
 	public void changeEmail(String email,Integer userId) throws CustomerException {
-		customerRepository.updateEmail(getUser(), email, userId);
-		
+			customerRepository.updateEmail(getUser(), email, userId);
 	}
 	
 	@Override
