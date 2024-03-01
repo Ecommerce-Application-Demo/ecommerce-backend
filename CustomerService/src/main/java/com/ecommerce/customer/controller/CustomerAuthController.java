@@ -27,7 +27,7 @@ import jakarta.validation.constraints.NotNull;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin
-@Tag(name = "Customer Controller : REST APIs") // http://localhost:8500/ecom/swagger-ui/index.html
+@Tag(name = "Customer-Authentication Controller : REST APIs") // http://localhost:8500/user/swagger-ui/index.html
 public class CustomerAuthController {
 
 	@Autowired
@@ -128,7 +128,7 @@ public class CustomerAuthController {
 	}
 	
 	@GetMapping("/index")
-	public String index() throws Exception {
+	public String index() {
 		return "Welcome to Ecommerce Application!";
 	}
 }

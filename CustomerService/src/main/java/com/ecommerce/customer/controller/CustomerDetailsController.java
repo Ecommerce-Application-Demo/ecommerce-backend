@@ -2,7 +2,6 @@ package com.ecommerce.customer.controller;
 
 import java.security.Principal;
 import java.util.List;
-
 import com.ecommerce.customer.dto.AddressDto;
 import com.ecommerce.customer.dto.CustomerDto;
 import com.ecommerce.customer.entity.StringInput;
@@ -78,6 +77,13 @@ public class CustomerDetailsController {
 	@Operation(summary = "To edit user acc details")
 	public ResponseEntity<CustomerDto> editDetails(@RequestBody CustomerDto customerDto) throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.editDetails(customerDto), HttpStatus.OK);
+	}
+	
+	@PutMapping("/account/email")
+	@Operation(summary = "To edit user email")
+	public ResponseEntity<String> editEmail(@RequestParam(name = "newEmail",required = true) @NotNull String newEmail,@RequestParam(name = "userId",required = true) Integer userId) throws CustomerException {
+		customerDetailsService.changeEmail(newEmail,userId);
+		return new ResponseEntity<>("Success",HttpStatus.OK);
 	}
 
 	@PostMapping("/address")

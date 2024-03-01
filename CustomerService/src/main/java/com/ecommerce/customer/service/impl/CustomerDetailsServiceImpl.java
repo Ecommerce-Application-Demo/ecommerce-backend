@@ -95,6 +95,12 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	}
 	
 	@Override
+	public void changeEmail(String email,Integer userId) throws CustomerException {
+		customerRepository.updateEmail(getUser(), email, userId);
+		
+	}
+	
+	@Override
 	public AddressDto addAddress(AddressDto addressDto) throws CustomerException {
 		Address address=modelMapper.map(addressDto,Address.class);
 		String user=getUser();
