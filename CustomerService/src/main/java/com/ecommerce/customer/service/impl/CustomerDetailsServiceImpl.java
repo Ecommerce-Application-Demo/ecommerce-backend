@@ -2,6 +2,8 @@ package com.ecommerce.customer.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import com.ecommerce.customer.dto.AddressDto;
 import com.ecommerce.customer.dto.CustomerDto;
 import com.ecommerce.customer.exception.CustomerException;
@@ -70,10 +72,17 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 		CustomerAuth customer= customerAuthRepository.findById(getUser()).get();
 		customer.setPassword(passwordEncoder.encode(newPassword));
 		customerAuthRepository.save(customer);
+		invalidateAllToken();
 		return true;
 		} catch (Exception e) {
 			throw new CustomerException("PASSWORD.UPDATE.ERROR",HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	@Override
+	public Boolean invalidateAllToken() throws CustomerException {
+		customerAuthRepository.invalidateTokens(getUser(),UUID.randomUUID().toString().replace("-",""));
+		return true;
 	}
 
 	@Override
@@ -98,7 +107,8 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	public void changeEmail(String email,Integer userId) throws CustomerException {
 			customerRepository.updateEmail(getUser(), email, userId);
 	}
-	
+
+
 	@Override
 	public AddressDto addAddress(AddressDto addressDto) throws CustomerException {
 		Address address=modelMapper.map(addressDto,Address.class);

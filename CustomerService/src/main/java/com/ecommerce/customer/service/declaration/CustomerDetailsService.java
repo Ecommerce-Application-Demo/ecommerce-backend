@@ -19,5 +19,5 @@ public interface CustomerDetailsService {
 	AddressDto editAddress(AddressDto addressDto) throws CustomerException;
 	void deleteAddress(int addId) throws CustomerException;
 	void changeEmail (String email, Integer userid) throws CustomerException;
-
+    Boolean invalidateAllToken() throws CustomerException;
 }

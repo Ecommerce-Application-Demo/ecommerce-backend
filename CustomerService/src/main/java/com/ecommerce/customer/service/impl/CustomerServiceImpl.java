@@ -16,6 +16,8 @@ import org.springframework.web.client.RestTemplate;
 import com.ecommerce.customer.entity.CustomerAuth;
 import com.ecommerce.customer.entity.Customer;
 
+import java.util.UUID;
+
 @Service
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
@@ -40,6 +42,7 @@ public class CustomerServiceImpl implements CustomerService {
 			CustomerAuth customerAuth = new CustomerAuth();
 			customerAuth.setEmail(customer.getEmail());
 			customerAuth.setPassword(passwordEncoder.encode(customer.getPassword()));
+			customerAuth.setLoginSalt(UUID.randomUUID().toString().replace("-",""));
 			customerAuth.setAuthCustomer(customer);
 			customerAuthRepository.save(customerAuth);
 		} else {

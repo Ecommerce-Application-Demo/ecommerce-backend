@@ -65,6 +65,17 @@ public class CustomerDetailsController {
 		return new ResponseEntity<>(environment.getProperty("LOGGED.OUT"), HttpStatus.OK);
 	}
 
+	@Operation(summary = "Invalidate all JWTs & Refresh Tokens")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Invalidated",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = boolean.class)) })
+	})
+	@GetMapping("/logout/allDevice")
+	public ResponseEntity<Boolean> invalidateAllToken() throws CustomerException {
+		return new ResponseEntity<>(customerDetailsService.invalidateAllToken(), HttpStatus.OK);
+	}
+
 	@Operation(summary = "Password verification for already logged in user")
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "Successful login",
