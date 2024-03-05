@@ -7,6 +7,7 @@ import com.ecommerce.customer.repository.CustomerRepository;
 import com.ecommerce.customer.service.declaration.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import com.ecommerce.customer.entity.CustomerAuth;
 import com.ecommerce.customer.entity.Customer;
+
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -40,6 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
 			CustomerAuth customerAuth = new CustomerAuth();
 			customerAuth.setEmail(customer.getEmail());
 			customerAuth.setPassword(passwordEncoder.encode(customer.getPassword()));
+			customerAuth.setLoginSalt(UUID.randomUUID().toString().replace("-",""));
 			customerAuth.setAuthCustomer(customer);
 			customerAuthRepository.save(customerAuth);
 		} else {
@@ -60,6 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 
+	@Profile(value = "dev")
 	@Scheduled(fixedDelay = 1000*60*5)
 	 void renderRunner() {
 		RestTemplate restTemplate= new RestTemplate();

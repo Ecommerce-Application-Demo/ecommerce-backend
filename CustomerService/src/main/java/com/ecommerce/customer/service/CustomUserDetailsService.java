@@ -1,7 +1,6 @@
 package com.ecommerce.customer.service;
 
 import java.util.Optional;
-
 import com.ecommerce.customer.repository.CustomerAuthRepository;
 import com.ecommerce.customer.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;

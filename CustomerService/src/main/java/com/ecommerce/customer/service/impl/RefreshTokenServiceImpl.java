@@ -6,6 +6,7 @@ import com.ecommerce.customer.Constants;
 import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.repository.RefreshTokenRepository;
 import com.ecommerce.customer.service.declaration.RefreshTokenService;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.ecommerce.customer.entity.JwtRefreshToken;
 
 @Service
+@Transactional
 @Slf4j
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 	
