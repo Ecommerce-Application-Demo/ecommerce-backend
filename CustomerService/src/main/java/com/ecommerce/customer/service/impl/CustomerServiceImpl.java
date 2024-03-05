@@ -7,6 +7,7 @@ import com.ecommerce.customer.repository.CustomerRepository;
 import com.ecommerce.customer.service.declaration.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -63,6 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
 	}
 	
 
+	@Profile(value = "dev")
 	@Scheduled(fixedDelay = 1000*60*5)
 	 void renderRunner() {
 		RestTemplate restTemplate= new RestTemplate();
