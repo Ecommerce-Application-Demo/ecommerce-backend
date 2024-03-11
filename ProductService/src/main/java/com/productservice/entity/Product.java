@@ -28,14 +28,14 @@ public class Product {
 	private String gender;
 	private String material;
 	@ManyToOne
-	@JoinColumn(name = "master_catagory")
-	private MasterCatagory masterCatagory;
+	@JoinColumn(name = "master_category")
+	private MasterCategory masterCategory;
 	@ManyToOne
-	@JoinColumn(name = "catagory")
-	private Catagory catagory;
+	@JoinColumn(name = "category")
+	private Category category;
 	@ManyToOne
-	@JoinColumn(name = "sub_catagory")
-	private subCatagory subCatagory;
+	@JoinColumn(name = "sub_category")
+	private SubCategory SubCategory;
 	@ManyToOne
 	@JoinColumn(name = "brand")
 	private Brand brand;

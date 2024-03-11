@@ -19,19 +19,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class subCatagory {
+public class Category {
 
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID subCatagoryId;
+	private UUID categoryId;
 	@Id
-	private String subCatagoryName;
-	private String subCatagoryDescription;
+	private String categoryName;
+	private String categoryDescription;
 	@ManyToOne
-	@JoinColumn(name = "catagory")
-	private Catagory catagory;
-	@ManyToOne
-	@JoinColumn(name = "master_catagory")
-	private MasterCatagory masterCatagory;
-	@OneToMany(mappedBy = "subCatagory",cascade = CascadeType.ALL)
+	@JoinColumn(name = "master_category")
+	private MasterCategory masterCategory;
+	@OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
+	private List<SubCategory> SubCategory;
+	@OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
 	private List<Product> product;
 }

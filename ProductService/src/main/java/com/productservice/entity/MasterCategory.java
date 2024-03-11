@@ -8,8 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,18 +17,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Catagory {
+public class MasterCategory {
 
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID catagoryId;
+	private UUID masterCategoryId;
 	@Id
-	private String catagoryName;
-	private String catagoryDescription;
-	@ManyToOne
-	@JoinColumn(name = "master_catagory")
-	private MasterCatagory masterCatagory;
-	@OneToMany(mappedBy = "catagory",cascade = CascadeType.ALL)
-	private List<subCatagory> subCatagory;
-	@OneToMany(mappedBy = "catagory",cascade = CascadeType.ALL)
+	private String masterCategoryName;
+	private String mastercategoryDescription;
+	@OneToMany(mappedBy = "masterCategory",cascade = CascadeType.ALL)
+	private List<Category> category;
+	@OneToMany(mappedBy = "masterCategory",cascade = CascadeType.ALL)
+	private List<SubCategory> SubCategory;
+	@OneToMany(mappedBy = "masterCategory",cascade = CascadeType.ALL)
 	private List<Product> product;
+	
 }
