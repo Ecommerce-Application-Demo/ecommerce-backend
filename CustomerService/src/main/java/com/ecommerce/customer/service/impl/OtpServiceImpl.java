@@ -32,6 +32,8 @@ public class OtpServiceImpl implements OtpService {
 	
 	@Value("#{new Integer(${OTP_VALIDITY})}")
 	public int OTP_VALIDITY;
+	@Value("spring.mail.username")
+	String fromEmail;
 
 	@Autowired
     OtpDetailsRepository otpDetailsRepository;
@@ -73,7 +75,7 @@ public class OtpServiceImpl implements OtpService {
 			mimeMessage.setContent(htmlTemplate(otp), "text/html");
 			helper.setTo(email);
 			helper.setSubject(otp + " : OTP to verify your Email for DesiCart");
-			helper.setFrom("onetimepassword_otp@outlook.in");
+			helper.setFrom(fromEmail);
 			mailSender.send(mimeMessage);
 	}
 
