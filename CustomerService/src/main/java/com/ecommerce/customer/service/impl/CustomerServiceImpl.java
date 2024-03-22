@@ -39,9 +39,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 		if (registeredEmail) {
 			Customer customer = modelMapper.map(customerDto, Customer.class);
+			customer.setEmail(customer.getEmail().toLowerCase());
 			customerRepository.save(customer);
 			CustomerAuth customerAuth = new CustomerAuth();
-			customerAuth.setEmail(customer.getEmail());
+			customerAuth.setEmail(customer.getEmail().toLowerCase());
 			customerAuth.setPassword(passwordEncoder.encode(customer.getPassword()));
 			customerAuth.setLoginSalt(UUID.randomUUID().toString().replace("-",""));
 			customerAuth.setAuthCustomer(customer);
@@ -54,13 +55,13 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public String welcomeService(String email) {
-		Customer customer = customerRepository.findByEmail(email).orElseThrow();
+		Customer customer = customerRepository.findByEmail(email.toLowerCase()).orElseThrow();
 		return customer.getName();
 	}
 
 	@Override
 	public Boolean isPresent(String email) {
-		return customerRepository.findByEmail(email).isPresent();
+		return customerRepository.findByEmail(email.toLowerCase()).isPresent();
 	}
 	
 

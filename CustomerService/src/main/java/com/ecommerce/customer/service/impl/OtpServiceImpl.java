@@ -49,7 +49,7 @@ public class OtpServiceImpl implements OtpService {
 		Random random = new Random();
 		int otp = random.nextInt(1001, 10000);
 		otpDetailsRepository
-				.save(new OtpDetails(email, otp, LocalDateTime.now().plusMinutes(OTP_VALIDITY)));
+				.save(new OtpDetails(email.toLowerCase(), otp, LocalDateTime.now().plusMinutes(OTP_VALIDITY)));
 		return otp;
 	}
 
@@ -73,7 +73,7 @@ public class OtpServiceImpl implements OtpService {
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
 			mimeMessage.setContent(htmlTemplate(otp), "text/html");
-			helper.setTo(email);
+			helper.setTo(email.toLowerCase());
 			helper.setSubject(otp + " : OTP to verify your Email for DesiCart");
 			helper.setFrom(fromEmail);
 			mailSender.send(mimeMessage);
