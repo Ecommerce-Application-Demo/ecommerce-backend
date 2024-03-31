@@ -11,7 +11,7 @@ This project is a web-based e-commerce application backend designed to facilitat
 - Spring REST
 - Spring Data JPA
 - JWT
-- Elasticsearch
+- Eureka Discovery Server
 
  ## Features
  
@@ -32,7 +32,10 @@ This project is a web-based e-commerce application backend designed to facilitat
 
 ## Project Structure
 
-The project replicates microservice architecture within a single multi-module repository for optimized hosting resources. It is hosted on Render.com using Docker containerization.
+The project replicates microservice architecture within a single multi-module repository for optimizing hosting resources. It is **hosted on Render.com using Docker containerization**.
+
+Microservices are registered in [Eureka Service Registry](https://github.com/Ecommerce-Application-Demo/service-registry)
+and can be accessed using [API Gateway](https://github.com/Ecommerce-Application-Demo/api-gateway) which implements **Circuit breaker, Rate Limiting & Load balancing**.
 
 ## Swagger Documentation
 
