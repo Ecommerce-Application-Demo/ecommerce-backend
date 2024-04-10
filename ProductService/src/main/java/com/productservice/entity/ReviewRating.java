@@ -2,10 +2,7 @@ package com.productservice.entity;
 
 import java.util.UUID;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +17,7 @@ public class ReviewRating {
 	private UUID ratingId;
 	private String customerEmail;
 	private String customerName;
+	@Column(length = 1000)
 	private String review;
 	private Float rating;
 	private UUID productId;

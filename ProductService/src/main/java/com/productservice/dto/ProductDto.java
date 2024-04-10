@@ -3,6 +3,8 @@ package com.productservice.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -14,10 +16,7 @@ public class ProductDto {
     private String productName;
     private String productDescription;
     private String productAvgRating;
+    private String reviewCount;
     private String gender;
     private String material;
-    private MasterCategoryDto masterCategory;
-    private CategoryDto category;
-    private SubCategoryDto SubCategory;
-    private BrandDto brand;
 }

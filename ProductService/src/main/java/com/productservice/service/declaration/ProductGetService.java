@@ -4,20 +4,24 @@ import com.productservice.dto.*;
 import com.productservice.entity.ReviewRating;
 import com.productservice.entity.Sku;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ProductGetService {
-    MasterCategoryDto getMasterCategory();
+  //  List<MasterCategoryDto> getAllMasterCategory();
 
-    CategoryDto getCategory();
+    List<MasterCategoryDto> getMasterCategory(String masterCategoryId, String masterCategoryName);
 
-    SubCategoryDto getSubCategory();
+    List<CategoryDto> getCategory(String categoryName, String categoryId, String masterCategory);
 
-    BrandDto getBrand();
+    List<SubCategoryDto> getSubCategory(String subCategoryName, String subCategoryId, String categoryName);
 
-    ProductDto getProduct();
+    List<BrandDto> getBrand();
 
-    ReviewRating getReview(UUID productId);
+    List<ProductDto> getProduct(String productId, String productName, String subCategoryName, String categoryName, String masterCategoryName, String brand, String gender);
 
-    Sku getSku(UUID productId);
+    List<ReviewRating> getReview(UUID productId);
+
+    List<SkuDto> getSku(String productId,String skuId, String size, String colour );
+
 }

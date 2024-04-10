@@ -1,15 +1,17 @@
-package com.productservice.dto;
+package com.productservice.dto.request;
 
+import com.productservice.dto.MasterCategoryDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CategoryDto {
-    private UUID categoryId;
+public class CategoryRequest {
     private String categoryName;
     private String categoryDescription;
+    private MasterCategoryDto masterCategoryDto;
 }

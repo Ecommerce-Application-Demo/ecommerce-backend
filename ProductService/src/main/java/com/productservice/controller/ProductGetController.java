@@ -2,7 +2,6 @@ package com.productservice.controller;
 
 import com.productservice.dto.*;
 import com.productservice.entity.ReviewRating;
-import com.productservice.entity.Sku;
 import com.productservice.service.declaration.ProductGetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -28,45 +28,52 @@ public class ProductGetController {
 
     @Operation(summary = "To get Master Category")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Master Category",
+            @ApiResponse(responseCode = "200", description = "Get Master Category based on parameters. Adding no parameter will return all from Db.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = MasterCategoryDto.class)) }),
     })
     @GetMapping("/master-category")
-    public ResponseEntity<MasterCategoryDto> getMasterCategory(){
-        return new ResponseEntity<>(productService.getMasterCategory(), HttpStatus.OK);
+    public ResponseEntity<List<MasterCategoryDto>> getMasterCategory(@RequestParam(required = false) String masterCategoryId,
+                                                                     @RequestParam(required = false) String masterCategoryName){
+        System.out.println(masterCategoryName+" "+ masterCategoryId);
+        return new ResponseEntity<>(productService.getMasterCategory(masterCategoryId,masterCategoryName), HttpStatus.OK);
     }
 
     @Operation(summary = "To get Category")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Category",
+            @ApiResponse(responseCode = "200", description = "Get Category based on parameters. Adding no parameter will return all from Db.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = CategoryDto.class)) }),
     })
     @GetMapping("/category")
-    public ResponseEntity<CategoryDto> getCategory(){
-        return new ResponseEntity<>(productService.getCategory(), HttpStatus.OK);
+    public ResponseEntity<List<CategoryDto>> getCategory(@RequestParam(required = false) String categoryId,
+                                                         @RequestParam(required = false) String CategoryName,
+                                                         @RequestParam(required = false) String masterCategoryName){
+        System.out.println(masterCategoryName+" "+ categoryId +" "+ CategoryName);
+        return new ResponseEntity<>(productService.getCategory(CategoryName,categoryId,masterCategoryName), HttpStatus.OK);
     }
 
     @Operation(summary = "To get SubCategory")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SubCategory",
+            @ApiResponse(responseCode = "200", description = "Get SubCategory based on parameters. Adding no parameter will return all from Db.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = SubCategoryDto.class)) }),
     })
     @GetMapping("/sub-category")
-    public ResponseEntity<SubCategoryDto> getSubCategory(){
-        return new ResponseEntity<>(productService.getSubCategory(), HttpStatus.OK);
+    public ResponseEntity<List<SubCategoryDto>> getSubCategory(@RequestParam(required = false) String subCategoryId,
+                                                               @RequestParam(required = false) String subCategoryName,
+                                                               @RequestParam(required = false) String categoryName){
+        return new ResponseEntity<>(productService.getSubCategory(subCategoryName,subCategoryId,categoryName), HttpStatus.OK);
     }
 
     @Operation(summary = "To get Brand")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Brand",
+            @ApiResponse(responseCode = "200", description = "Get all Brand.",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = String.class)) }),
     })
     @GetMapping("/brand")
-    public ResponseEntity<?> getBrand(){
+    public ResponseEntity<List<BrandDto>> getBrand(){
         return new ResponseEntity<>(productService.getBrand(), HttpStatus.OK);
     }
 
@@ -77,29 +84,41 @@ public class ProductGetController {
                             schema = @Schema(implementation = ProductDto.class)) }),
     })
     @GetMapping("/product")
-    public ResponseEntity<ProductDto> getProduct(){
-        return new ResponseEntity<>(productService.getProduct(), HttpStatus.OK);
+    public ResponseEntity<List<ProductDto>> getProduct(@RequestParam(required = false) String productId,
+                                                 @RequestParam(required = false) String productName,
+                                                 @RequestParam(required = false) String subCategoryName,
+                                                 @RequestParam(required = false) String categoryName,
+                                                 @RequestParam(required = false) String masterCategoryName,
+                                                 @RequestParam(required = false) String brand,
+                                                 @RequestParam(required = false) String gender)
+    {
+
+        return new ResponseEntity<>(productService.getProduct(productId,productName,subCategoryName,categoryName,
+                                                     masterCategoryName,brand,gender), HttpStatus.OK);
     }
 
     @Operation(summary = "To get Review")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Review geted",
+            @ApiResponse(responseCode = "200", description = "Get all Review for a product",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ReviewRating.class)) }),
     })
     @GetMapping("/review/{productid}")
-    public ResponseEntity<ReviewRating> getReview(@PathVariable(name = "productid") UUID productId){
+    public ResponseEntity<List<ReviewRating>> getReview(@PathVariable(name = "productid") UUID productId){
         return new ResponseEntity<>(productService.getReview(productId), HttpStatus.OK);
     }
 
-    @Operation(summary = "To get Product SKUs")
+    @Operation(summary = "To get All Product SKUs")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product SKU",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Sku.class)) }),
+                            schema = @Schema(implementation = SkuDto.class)) }),
     })
-    @GetMapping("/product/sku/{productid}")
-    public ResponseEntity<Sku> getProductSku(@PathVariable(name = "productid") UUID productId){
-        return new ResponseEntity<>(productService.getSku(productId), HttpStatus.OK);
+    @GetMapping("/product/sku")
+    public ResponseEntity<List<SkuDto>> getProductSku(@RequestParam String productId,
+                                                   @RequestParam(required = false) String skuId,
+                                                   @RequestParam(required = false) String size,
+                                                   @RequestParam (required = false) String colour){
+        return new ResponseEntity<>(productService.getSku(productId,skuId,size,colour), HttpStatus.OK);
     }
 }

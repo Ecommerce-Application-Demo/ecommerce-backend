@@ -1,6 +1,10 @@
 package com.productservice.controller;
 
 import com.productservice.dto.*;
+import com.productservice.dto.request.CategoryRequest;
+import com.productservice.dto.request.ProductRequest;
+import com.productservice.dto.request.SkuRequest;
+import com.productservice.dto.request.SubCategoryRequest;
 import com.productservice.entity.ReviewRating;
 import com.productservice.entity.Sku;
 import com.productservice.service.declaration.ProductAddService;
@@ -34,7 +38,7 @@ public class ProductAddController {
                             schema = @Schema(implementation = String.class)) }),
              })
     @PostMapping("/master-category")
-    public ResponseEntity<?> addMasterCategory(@RequestBody MasterCategoryDto masterCategoryDto){
+    public ResponseEntity<String> addMasterCategory(@RequestBody MasterCategoryDto masterCategoryDto){
         productService.addMasterCategory(masterCategoryDto);
         return new ResponseEntity<>(environment.getProperty("MASTER.CATEGORY.ADDED"), HttpStatus.OK);
     }
@@ -46,8 +50,8 @@ public class ProductAddController {
                             schema = @Schema(implementation = String.class)) }),
     })
     @PostMapping("/category")
-    public ResponseEntity<?> addCategory(@RequestBody CategoryDto categoryDto){
-        productService.addCategory(categoryDto);
+    public ResponseEntity<String> addCategory(@RequestBody CategoryRequest categoryRequest){
+        productService.addCategory(categoryRequest);
         return new ResponseEntity<>(environment.getProperty("CATEGORY.ADDED"), HttpStatus.OK);
     }
 
@@ -58,7 +62,7 @@ public class ProductAddController {
                             schema = @Schema(implementation = String.class)) }),
     })
     @PostMapping("/sub-category")
-    public ResponseEntity<?> addSubCategory(@RequestBody SubCategoryDto subCategoryDto){
+    public ResponseEntity<?> addSubCategory(@RequestBody SubCategoryRequest subCategoryDto){
         productService.addSubCategory(subCategoryDto);
         return new ResponseEntity<>(environment.getProperty("SUB.CATEGORY.ADDED"), HttpStatus.OK);
     }
@@ -82,7 +86,7 @@ public class ProductAddController {
                             schema = @Schema(implementation = ProductDto.class)) }),
     })
     @PostMapping("/product")
-    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto productDto){
+    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductRequest productDto){
         return new ResponseEntity<>(productService.addProduct(productDto), HttpStatus.OK);
     }
 
@@ -104,7 +108,7 @@ public class ProductAddController {
                             schema = @Schema(implementation = Sku.class)) }),
     })
     @PostMapping("/product/sku")
-    public ResponseEntity<Sku> addProductSku(@RequestBody Sku sku){
+    public ResponseEntity<Sku> addProductSku(@RequestBody SkuRequest sku){
         return new ResponseEntity<>(productService.addSku(sku), HttpStatus.OK);
     }
 }

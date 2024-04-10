@@ -1,6 +1,8 @@
 package com.productservice.entity;
 
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -19,10 +21,13 @@ public class Sku {
 	private String skuId;
 	private String size;
 	private String colour;
-	private BigDecimal price;
+	private BigDecimal mrp;
+	private BigDecimal discountPercentage;
+	private BigDecimal finalPrice;
 	private Integer quantity;
-	private Long availablePincodes;
+	private String availablePincodes;
 	@ManyToOne
-	@JoinColumn(name = "product_id")
+	@JoinColumn(name = "product")
+	@JsonIgnore
 	private Product product;
 }

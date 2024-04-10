@@ -9,7 +9,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.StreamSupport;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ProductGetServiceImpl implements ProductGetService {
@@ -30,39 +34,78 @@ public class ProductGetServiceImpl implements ProductGetService {
     @Autowired
     ModelMapper modelMapper;
 
-
     @Override
-    public MasterCategoryDto getMasterCategory() {
-        return null;
+    public List<MasterCategoryDto> getMasterCategory(String masterCategoryId, String masterCategoryName) {
+        List<MasterCategoryDto> masterCategoryDto = masterCategoryRepo.findMasterCategory(masterCategoryName, masterCategoryId)
+                .stream().map(masterCategory -> modelMapper.map(masterCategory, MasterCategoryDto.class)).toList();
+        return masterCategoryDto;
     }
 
     @Override
-    public CategoryDto getCategory() {
-        return null;
+    public List<CategoryDto> getCategory(String categoryName, String categoryId, String masterCategory) {
+        List<CategoryDto> categoryDto;
+        if (categoryName != null && categoryId != null && masterCategory != null) {
+            categoryDto = categoryRepo.findCategory(categoryName, categoryId, masterCategory).stream()
+                    .map(category -> modelMapper.map(category, CategoryDto.class)).toList();
+        } else {
+            categoryDto = StreamSupport.stream(categoryRepo.findAll().spliterator(), false)
+                    .map(category -> modelMapper.map(category, CategoryDto.class)).toList();
+        }
+        return categoryDto;
     }
 
     @Override
-    public SubCategoryDto getSubCategory() {
-        return null;
+    public List<SubCategoryDto> getSubCategory(String subCategoryName, String subCategoryId, String categoryName) {
+        List<SubCategoryDto> subCategoryDto;
+        if (subCategoryName != null && subCategoryId != null && categoryName != null) {
+            subCategoryDto = subCategoryRepo.findSubCategory(categoryName, subCategoryId, categoryName).stream()
+                    .map(subCategory -> modelMapper.map(subCategory, SubCategoryDto.class)).toList();
+        } else {
+            subCategoryDto = StreamSupport.stream(subCategoryRepo.findAll().spliterator(), false)
+                    .map(subCategory -> modelMapper.map(subCategory, SubCategoryDto.class)).toList();
+        }
+        return subCategoryDto;
     }
 
     @Override
-    public BrandDto getBrand() {
-        return null;
+    public List<BrandDto> getBrand() {
+        List<BrandDto> brandDto = StreamSupport.stream(brandRepo.findAll().spliterator(), false)
+                .map(brand -> modelMapper.map(brand, BrandDto.class)).toList();
+        return brandDto;
     }
 
     @Override
-    public ProductDto getProduct() {
-        return null;
+    public List<ProductDto> getProduct(String productId, String productName, String subCategoryName,
+                                       String categoryName, String masterCategoryName, String brand, String gender) {
+        List<ProductDto> productDto = null;
+        if (masterCategoryName != null || subCategoryName != null || categoryName != null) {
+            productDto = productRepo.findProductByCategory(subCategoryName, categoryName, masterCategoryName).stream()
+                    .map(product -> {
+                        product.setProductAvgRating(reviewRatingRepo.findAvgRating(product.getProductId()).toString());
+                        product.setReviewCount(reviewRatingRepo.findCountByProductId(product.getProductId()).toString());
+                        return modelMapper.map(product, ProductDto.class);
+                    }).toList();
+        }
+        productDto = productRepo.findProductById_Name(productName, productId).stream()
+                .map(product -> {
+                    product.setProductAvgRating(reviewRatingRepo.findAvgRating(product.getProductId()).toString());
+                    product.setReviewCount(reviewRatingRepo.findCountByProductId(product.getProductId()).toString());
+                    return modelMapper.map(product, ProductDto.class);
+                }).toList();
+        return productDto;
     }
 
     @Override
-    public ReviewRating getReview(UUID productId) {
-        return null;
+    public List<ReviewRating> getReview(UUID productId) {
+        return reviewRatingRepo.findAllByProductId(productId);
     }
 
     @Override
-    public Sku getSku(UUID productId) {
-        return null;
+    public List<SkuDto> getSku(String productId,String skuId, String size, String colour) {
+
+        List<SkuDto> skuDto= skuRepo.findSKU(productId,skuId,size,colour).stream()
+                .map(sku -> modelMapper.map(sku,SkuDto.class)).toList();
+
+        return skuDto;
     }
 }

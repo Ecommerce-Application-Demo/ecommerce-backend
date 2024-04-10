@@ -12,6 +12,4 @@ public class SubCategoryDto {
     private UUID SubCategoryId;
     private String SubCategoryName;
     private String SubCategoryDescription;
-    private CategoryDto category;
-    private MasterCategoryDto masterCategory;
 }
