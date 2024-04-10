@@ -14,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductRequest {
-
+    private UUID productId;
     private String productName;
     private String productDescription;
     private String productAvgRating;

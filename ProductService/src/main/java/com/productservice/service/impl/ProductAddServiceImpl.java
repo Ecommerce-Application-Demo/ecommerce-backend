@@ -85,6 +85,7 @@ public class ProductAddServiceImpl implements ProductAddService {
     @Override
     public Sku addSku(SkuRequest skuDto){
         Sku sku = modelMapper.map(skuDto, Sku.class);
+        sku.setImages(skuDto.getImages());
         sku.setProduct(productRepo.findById(skuDto.getProductId()).get());
         sku.setSkuId( sku.getProduct().getProductId()+"_"+sku.getSize()+"_"+sku.getColour() );
         BigDecimal finalPrice = sku.getMrp().subtract(sku.getDiscountPercentage().multiply(sku.getMrp()).divide(new BigDecimal(100), MathContext.DECIMAL128));

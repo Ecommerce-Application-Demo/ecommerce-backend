@@ -2,7 +2,6 @@ package com.productservice.service.declaration;
 
 import com.productservice.dto.*;
 import com.productservice.entity.ReviewRating;
-import com.productservice.entity.Sku;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +17,7 @@ public interface ProductGetService {
 
     List<BrandDto> getBrand();
 
-    List<ProductDto> getProduct(String productId, String productName, String subCategoryName, String categoryName, String masterCategoryName, String brand, String gender);
+    List<ProductResponse> getProduct(String productId, String productName, String subCategoryName, String categoryName, String masterCategoryName, String brand, String gender);
 
     List<ReviewRating> getReview(UUID productId);
 

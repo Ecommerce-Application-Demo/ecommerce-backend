@@ -12,8 +12,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubCategoryRequest {
-    private String SubCategoryName;
-    private String SubCategoryDescription;
+    private UUID subCategoryId;
+    private String subCategoryName;
+    private String subCategoryDescription;
     private MasterCategoryDto masterCategoryDto;
     private CategoryDto categoryDto;
 }

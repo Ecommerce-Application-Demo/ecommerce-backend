@@ -81,10 +81,10 @@ public class ProductGetController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Product",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = ProductDto.class)) }),
+                            schema = @Schema(implementation = ProductResponse.class)) }),
     })
     @GetMapping("/product")
-    public ResponseEntity<List<ProductDto>> getProduct(@RequestParam(required = false) String productId,
+    public ResponseEntity<List<ProductResponse>> getProduct(@RequestParam(required = false) String productId,
                                                  @RequestParam(required = false) String productName,
                                                  @RequestParam(required = false) String subCategoryName,
                                                  @RequestParam(required = false) String categoryName,

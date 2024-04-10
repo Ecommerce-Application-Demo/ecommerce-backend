@@ -2,7 +2,6 @@ package com.productservice.service.impl;
 
 import com.productservice.dto.*;
 import com.productservice.entity.ReviewRating;
-import com.productservice.entity.Sku;
 import com.productservice.repository.*;
 import com.productservice.service.declaration.ProductGetService;
 import org.modelmapper.ModelMapper;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.StreamSupport;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 public class ProductGetServiceImpl implements ProductGetService {
@@ -75,23 +72,32 @@ public class ProductGetServiceImpl implements ProductGetService {
     }
 
     @Override
-    public List<ProductDto> getProduct(String productId, String productName, String subCategoryName,
-                                       String categoryName, String masterCategoryName, String brand, String gender) {
-        List<ProductDto> productDto = null;
+    public List<ProductResponse> getProduct(String productId, String productName, String subCategoryName,
+                                            String categoryName, String masterCategoryName, String brand, String gender) {
+        List<ProductResponse> productDto;
         if (masterCategoryName != null || subCategoryName != null || categoryName != null) {
             productDto = productRepo.findProductByCategory(subCategoryName, categoryName, masterCategoryName).stream()
                     .map(product -> {
                         product.setProductAvgRating(reviewRatingRepo.findAvgRating(product.getProductId()).toString());
                         product.setReviewCount(reviewRatingRepo.findCountByProductId(product.getProductId()).toString());
                         return modelMapper.map(product, ProductDto.class);
+                    }).map(productDto1 -> {
+                        ProductResponse res = modelMapper.map(productDto1, ProductResponse.class);
+                        res.setSku(getSku(productDto1.getProductId().toString(), null, null, null));
+                        return res;
+                    }).toList();
+        }else {
+            productDto = productRepo.findProductById_Name(productName, productId).stream()
+                    .map(product -> {
+                        product.setProductAvgRating(reviewRatingRepo.findAvgRating(product.getProductId()).toString());
+                        product.setReviewCount(reviewRatingRepo.findCountByProductId(product.getProductId()).toString());
+                         return modelMapper.map(product, ProductDto.class);
+                    }).map(productDto1 -> {
+                        ProductResponse res = modelMapper.map(productDto1, ProductResponse.class);
+                        res.setSku(getSku(productDto1.getProductId().toString(), null, null, null));
+                        return res;
                     }).toList();
         }
-        productDto = productRepo.findProductById_Name(productName, productId).stream()
-                .map(product -> {
-                    product.setProductAvgRating(reviewRatingRepo.findAvgRating(product.getProductId()).toString());
-                    product.setReviewCount(reviewRatingRepo.findCountByProductId(product.getProductId()).toString());
-                    return modelMapper.map(product, ProductDto.class);
-                }).toList();
         return productDto;
     }
 
@@ -105,7 +111,6 @@ public class ProductGetServiceImpl implements ProductGetService {
 
         List<SkuDto> skuDto= skuRepo.findSKU(productId,skuId,size,colour).stream()
                 .map(sku -> modelMapper.map(sku,SkuDto.class)).toList();
-
         return skuDto;
     }
 }

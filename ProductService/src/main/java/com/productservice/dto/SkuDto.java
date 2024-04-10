@@ -1,5 +1,6 @@
 package com.productservice.dto;
 
+import com.productservice.entity.Images;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ public class SkuDto {
     private BigDecimal mrp;
     private BigDecimal discountPercentage;
     private BigDecimal finalPrice;
+    private Images images;
     private Integer quantity;
     private String availablePincodes;
 }
