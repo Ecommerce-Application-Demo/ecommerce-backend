@@ -2,3 +2,5 @@ rootProject.name = 'Ecom'
 
 include('CustomerService')
 include('ProductService')
+include('api-gateway')
+include('service-registry')

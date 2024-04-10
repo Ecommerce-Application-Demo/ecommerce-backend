@@ -10,6 +10,10 @@ RUN gradle build -x test --no-daemon
 WORKDIR /app/ProductService
 RUN gradle build -x test --no-daemon
 
+WORKDIR /app/api-gateway
+RUN gradle build -x test --no-daemon
+
+
 # Use the official OpenJDK base image for Java 21
 FROM openjdk:21-jdk-slim
 
@@ -20,10 +24,11 @@ WORKDIR /app
 
 COPY --from=DEPS /app/CustomerService/build/libs /app/build
 COPY --from=DEPS /app/ProductService/build/libs /app/build
+COPY --from=DEPS /app/api-gateway/build/libs /app/build
 COPY --from=DEPS /app/command.sh /app/
 
 # Expose the port that your Spring Boot application will run on
-EXPOSE 8500 8520
+EXPOSE 8590
 
 # Specify the command to run on container startup
 CMD ["bash","/app/command.sh"]
