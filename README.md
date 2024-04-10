@@ -23,7 +23,8 @@ This project is a web-based e-commerce application backend designed to facilitat
   - Email-based OTP verification for added security.
   - Multi-device logout for user account protection.
 - Product Management:
-  - Ability to add and view product information.
+  - Ability to add All Categories, Product & SKUs.
+  - Get Products & SKUs based on custom filter.
 - Planned Features:
   - Shopping cart functionality.
   - Order processing and management.
@@ -39,8 +40,10 @@ and can be accessed using [API Gateway](https://github.com/Ecommerce-Application
 
 ## Swagger Documentation
 
-The Swagger documentation for this project's APIs :  
-[Customer Service](https://ecommerce-backend-dev.onrender.com/user/swagger-ui/index.html)
+The Swagger documentation for this project's APIs : 
+
+- [Customer Service](https://ecommerce-backend-dev.onrender.com/user/swagger-ui/index.html)
+- [Product Service](https://ecommerce-backend-dev.onrender.com/product/swagger-ui/index.html)
 
 ## Live Website
 
