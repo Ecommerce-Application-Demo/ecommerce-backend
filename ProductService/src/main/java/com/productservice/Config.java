@@ -7,6 +7,9 @@ import io.swagger.v3.oas.models.info.License;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class Config {
@@ -26,5 +29,12 @@ public class Config {
                 .externalDocs(new ExternalDocumentation()
                         .description("Github")
                         .url("https://github.com/Ecommerce-Application-Demo/ecommerce-backend"));
+    }
+
+    @Profile(value = "dev")
+    @Scheduled(fixedDelay = 1000*60*5)
+    void renderRunner() {
+        RestTemplate restTemplate= new RestTemplate();
+        restTemplate.getForEntity("https://ecommerce-backend-dev.onrender.com/product/actuator/info",String.class);
     }
 }
