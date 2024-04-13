@@ -29,7 +29,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	@Override
 	public String getRefreshToken(String emailDto) {
 		String email = emailDto;
-		JwtRefreshToken newToken = new JwtRefreshToken(email, UUID.randomUUID().toString(),
+		JwtRefreshToken newToken = new JwtRefreshToken(email.toLowerCase(), UUID.randomUUID().toString(),
 				Instant.now().plusMillis(REFRESH_TOKEN_VALIDITY));
 		refreshTokenRepository.save(newToken);
 		return newToken.getToken();

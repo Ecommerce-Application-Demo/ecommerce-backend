@@ -1,5 +1,6 @@
 package com.ecommerce.customer.dto;
 
+import com.ecommerce.customer.Constants;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -11,7 +12,7 @@ public class AddressDto {
 	private int addId;
 	@NotNull
 	private String name;
-	@Pattern(regexp="^(?=[6-9])\\d{10}$",message = "Mobile number invalid format")
+	@Pattern(regexp= Constants.PHONE_NUMBER_REGEX, message = "Mobile number invalid format")
 	private String phoneNumber;
 	private String addressLine1;
 	@NotNull

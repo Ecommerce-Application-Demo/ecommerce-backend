@@ -25,10 +25,13 @@ public class Config {
 	              .info(new Info().title("Customer Service")
 	              .description("JAVA Backend API Documentation for Ecommerce Customer Service")
 	              .version("v0.0.1")
-	              .license(new License().name("Apache 2.0").url("http://springdoc.org")))
+	              .license(new License().name("MIT License").url("https://opensource.org/license/mit")))
 	              .externalDocs(new ExternalDocumentation()
 	              .description("Github")
-	              .url("https://github.com/Ecommerce-Application-Demo/ecommerce-backend"));
+	              .url("https://github.com/Ecommerce-Application-Demo/ecommerce-backend"))
+				  .externalDocs(new ExternalDocumentation()
+						  .description("LinkedIn")
+						  .url("https://www.linkedin.com/in/souravmazumder5"));
 	  }
 
 }
