@@ -55,7 +55,7 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	
 	@Override
 	public CustomerDto customerDetails(String email) {
-		Customer customer = customerRepository.findByEmail(email).get();
+		Customer customer = customerRepository.findByEmail(email.toLowerCase()).get();
 		return modelMapper.map(customer,CustomerDto.class) ;
 	}
 
@@ -95,8 +95,9 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	public CustomerDto editDetails(CustomerDto customerDto) throws CustomerException {
 		Customer customer =modelMapper.map(customerDto,Customer.class);
 		if(customerRepository.existsById(customer.getUserId())) {
-		customerRepository.save(customer);
-		return customerDto;
+			customer.setEmail(customer.getEmail().toLowerCase());
+			customerRepository.save(customer);
+			return customerDto;
 		}
 		else {
 			throw new CustomerException("INVALID.USER.ID", HttpStatus.NOT_FOUND);
@@ -105,7 +106,7 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 	
 	@Override
 	public void changeEmail(String email,Integer userId) throws CustomerException {
-			customerRepository.updateEmail(getUser(), email, userId);
+			customerRepository.updateEmail(getUser(), email.toLowerCase(), userId);
 	}
 
 

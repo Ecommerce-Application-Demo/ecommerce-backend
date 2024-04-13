@@ -83,7 +83,7 @@ public class CustomerDetailsController {
 							schema = @Schema(implementation = boolean.class)) })
 							})
 	@PostMapping("/relogin")
-	public ResponseEntity<Boolean> customerLoginApi(@RequestBody @NotNull StringInput password)
+	public ResponseEntity<Boolean> customerPasswordValidation(@RequestBody @NotNull StringInput password)
 			throws CustomerException {
 		return new ResponseEntity<>(customerDetailsService.passwordVerify(password.getInput()), HttpStatus.OK);
 	}

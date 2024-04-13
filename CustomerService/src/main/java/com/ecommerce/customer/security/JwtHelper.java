@@ -68,7 +68,7 @@ public class JwtHelper {
 
 	public String generateToken(String email) {
 		Map<String, Object> claims = new HashMap<>();
-		Customer user=customerRepository.findByEmail(email).get();
+		Customer user=customerRepository.findByEmail(email.toLowerCase()).get();
 		claims.put("Name",user.getName());
 		claims.put("User Id",user.getUserId());
 		claims.put("validationKey",customerAuthRepository.findByEmail(email).get().getLoginSalt());
@@ -76,7 +76,7 @@ public class JwtHelper {
 	}
 
 	private String createToken(Map<String, Object> claims, String email) {
-		return Jwts.builder().setClaims(claims).setSubject(email).setIssuedAt(new Date(System.currentTimeMillis()))
+		return Jwts.builder().setClaims(claims).setSubject(email.toLowerCase()).setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + JWT_VALIDITY))
 				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 	}

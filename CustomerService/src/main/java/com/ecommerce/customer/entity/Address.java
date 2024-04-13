@@ -1,11 +1,6 @@
 package com.ecommerce.customer.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +17,7 @@ public class Address {
 	private String userIdEmail;
 	private String name;
 	private String phoneNumber;
+	@Column(length = 500)
 	private String addressLine1;
 	private String pincode;
 	private String state;
