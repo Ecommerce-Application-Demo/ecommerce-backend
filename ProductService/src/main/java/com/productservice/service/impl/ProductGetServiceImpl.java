@@ -41,7 +41,7 @@ public class ProductGetServiceImpl implements ProductGetService {
     @Override
     public List<CategoryDto> getCategory(String categoryName, String categoryId, String masterCategory) {
         List<CategoryDto> categoryDto;
-        if (categoryName != null && categoryId != null && masterCategory != null) {
+        if (categoryName != null || categoryId != null || masterCategory != null) {
             categoryDto = categoryRepo.findCategory(categoryName, categoryId, masterCategory).stream()
                     .map(category -> modelMapper.map(category, CategoryDto.class)).toList();
         } else {
@@ -54,8 +54,8 @@ public class ProductGetServiceImpl implements ProductGetService {
     @Override
     public List<SubCategoryDto> getSubCategory(String subCategoryName, String subCategoryId, String categoryName) {
         List<SubCategoryDto> subCategoryDto;
-        if (subCategoryName != null && subCategoryId != null && categoryName != null) {
-            subCategoryDto = subCategoryRepo.findSubCategory(categoryName, subCategoryId, categoryName).stream()
+        if (subCategoryName != null || subCategoryId != null || categoryName != null) {
+            subCategoryDto = subCategoryRepo.findSubCategory(subCategoryName, subCategoryId, categoryName).stream()
                     .map(subCategory -> modelMapper.map(subCategory, SubCategoryDto.class)).toList();
         } else {
             subCategoryDto = StreamSupport.stream(subCategoryRepo.findAll().spliterator(), false)

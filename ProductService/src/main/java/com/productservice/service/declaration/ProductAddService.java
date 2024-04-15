@@ -10,13 +10,13 @@ import com.productservice.entity.Sku;
 
 public interface ProductAddService {
 
-    void addMasterCategory(MasterCategoryDto masterCategoryDto);
+    MasterCategoryDto addMasterCategory(MasterCategoryDto masterCategoryDto);
 
-    void addCategory(CategoryRequest categoryDto);
+    CategoryDto addCategory(CategoryRequest categoryDto);
 
-    void addSubCategory(SubCategoryRequest subCategoryDto);
+    SubCategoryDto addSubCategory(SubCategoryRequest subCategoryDto);
 
-    void addBrand(BrandDto brandDto);
+    BrandDto addBrand(BrandDto brandDto);
 
     ProductDto addProduct(ProductRequest productDto);
 

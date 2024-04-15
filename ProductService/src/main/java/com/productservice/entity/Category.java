@@ -21,7 +21,7 @@ public class Category {
 	@Column(length = 500)
 	private String categoryDescription;
 	@ManyToOne
-	@JoinColumn(name = "master_category")
+	@JoinColumn(name = "category_master_category")
 	private MasterCategory masterCategory;
 	@OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
 	private List<SubCategory> SubCategory;

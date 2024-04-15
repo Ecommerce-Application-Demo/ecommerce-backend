@@ -10,7 +10,7 @@ public interface SkuRepo extends CrudRepository<Sku, String> {
 
 
     @Query(value = "SELECT * FROM product.sku s LEFT OUTER JOIN product.product p " +
-            "ON s.product = p.product_id " +
+            "ON s.sku_product = p.product_id " +
             "WHERE (?1 IS NULL OR p.product_id = CAST(?1 AS UUID)) " +
             "AND (?2 IS NULL OR s.sku_id = ?2 ) " +
             "AND (?3 IS NULL OR s.size = ?3) " +

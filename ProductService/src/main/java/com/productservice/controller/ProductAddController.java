@@ -33,48 +33,45 @@ public class ProductAddController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Master Category Added",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) }),
+                            schema = @Schema(implementation = MasterCategoryDto.class)) }),
              })
     @PostMapping("/master-category")
-    public ResponseEntity<String> addMasterCategory(@RequestBody MasterCategoryDto masterCategoryDto){
-        productService.addMasterCategory(masterCategoryDto);
-        return new ResponseEntity<>(environment.getProperty("MASTER.CATEGORY.ADDED"), HttpStatus.OK);
+    public ResponseEntity<MasterCategoryDto> addMasterCategory(@RequestBody MasterCategoryDto masterCategoryDto){
+        return new ResponseEntity<>(productService.addMasterCategory(masterCategoryDto), HttpStatus.OK);
     }
 
     @Operation(summary = "To add Category")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Category Added",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) }),
+                            schema = @Schema(implementation = CategoryDto.class)) }),
     })
     @PostMapping("/category")
-    public ResponseEntity<String> addCategory(@RequestBody CategoryRequest categoryRequest){
-        productService.addCategory(categoryRequest);
-        return new ResponseEntity<>(environment.getProperty("CATEGORY.ADDED"), HttpStatus.OK);
+
+    public ResponseEntity<CategoryDto> addCategory(@RequestBody CategoryRequest categoryRequest){
+        return new ResponseEntity<>(productService.addCategory(categoryRequest), HttpStatus.OK);
     }
 
     @Operation(summary = "To add SubCategory")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "SubCategory Added",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) }),
+                            schema = @Schema(implementation = SubCategoryDto.class)) }),
     })
     @PostMapping("/sub-category")
-    public ResponseEntity<?> addSubCategory(@RequestBody SubCategoryRequest subCategoryDto){
-        productService.addSubCategory(subCategoryDto);
-        return new ResponseEntity<>(environment.getProperty("SUB.CATEGORY.ADDED"), HttpStatus.OK);
+    public ResponseEntity<SubCategoryDto> addSubCategory(@RequestBody SubCategoryRequest subCategoryDto){
+        return new ResponseEntity<>(productService.addSubCategory(subCategoryDto), HttpStatus.OK);
     }
 
     @Operation(summary = "To add Brand")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Brand` Added",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) }),
+                            schema = @Schema(implementation = BrandDto.class)) }),
     })
     @PostMapping("/brand")
-    public ResponseEntity<?> addBrand(@RequestBody BrandDto brandDto){
-        productService.addBrand(brandDto);
-        return new ResponseEntity<>(environment.getProperty("BRAND.ADDED"), HttpStatus.OK);
+    public ResponseEntity<BrandDto> addBrand(@RequestBody BrandDto brandDto){
+        return new ResponseEntity<>(productService.addBrand(brandDto), HttpStatus.OK);
     }
 
     @Operation(summary = "To add Product")

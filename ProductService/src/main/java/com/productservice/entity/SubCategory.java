@@ -1,12 +1,12 @@
 package com.productservice.entity;
 
-import java.util.List;
-import java.util.UUID;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -21,10 +21,10 @@ public class SubCategory {
 	@Column(length = 500)
 	private String SubCategoryDescription;
 	@ManyToOne
-	@JoinColumn(name = "category")
+	@JoinColumn(name = "sub_category_category")
 	private Category category;
 	@ManyToOne
-	@JoinColumn(name = "master_category")
+	@JoinColumn(name = "sub_category_master_category")
 	private MasterCategory masterCategory;
 	@OneToMany(mappedBy = "SubCategory",cascade = CascadeType.ALL)
 	private List<Product> product;

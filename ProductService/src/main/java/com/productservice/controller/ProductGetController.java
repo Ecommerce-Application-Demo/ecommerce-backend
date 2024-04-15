@@ -50,7 +50,6 @@ public class ProductGetController {
     public ResponseEntity<List<CategoryDto>> getCategory(@RequestParam(required = false) String categoryId,
                                                          @RequestParam(required = false) String CategoryName,
                                                          @RequestParam(required = false) String masterCategoryName){
-        System.out.println(masterCategoryName+" "+ categoryId +" "+ CategoryName);
         return new ResponseEntity<>(productService.getCategory(CategoryName,categoryId,masterCategoryName), HttpStatus.OK);
     }
 

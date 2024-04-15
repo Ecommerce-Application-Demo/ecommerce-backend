@@ -29,7 +29,7 @@ public class Sku {
 	private Integer quantity;
 	private String availablePincodes;
 	@ManyToOne
-	@JoinColumn(name = "product")
+	@JoinColumn(name = "sku_product")
 	@JsonIgnore
 	private Product product;
 }

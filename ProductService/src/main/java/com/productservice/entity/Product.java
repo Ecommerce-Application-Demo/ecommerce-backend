@@ -25,16 +25,16 @@ public class Product {
 	private String gender;
 	private String material;
 	@ManyToOne
-	@JoinColumn(name = "master_category")
+	@JoinColumn(name = "product_master_category")
 	private MasterCategory masterCategory;
 	@ManyToOne
-	@JoinColumn(name = "category")
+	@JoinColumn(name = "product_category")
 	private Category category;
 	@ManyToOne
-	@JoinColumn(name = "sub_category")
+	@JoinColumn(name = "product_sub_category")
 	private SubCategory SubCategory;
 	@ManyToOne
-	@JoinColumn(name = "brand")
+	@JoinColumn(name = "product_brand")
 	private Brand brand;
 	@OneToMany(mappedBy = "product")
 	private List<Sku> sku;
