@@ -2,6 +2,8 @@
 
 This project is a web-based e-commerce application backend designed to facilitate the purchase of fashion products online. It offers various features including user registration, login/logout, profile management, address management, email OTP verification, multi-device logout, and product management via JWT-secured REST APIs. Future plans include the implementation of cart, order, payment, and return functionalities.
 
+- This is a Consolidated Repository of the E-commerce  Microservice. Find Individual Repo links below.
+
 ## Technologies Used
 
 - Java SE 21
@@ -11,10 +13,9 @@ This project is a web-based e-commerce application backend designed to facilitat
 - Spring REST
 - Spring Data JPA
 - JWT
-- Eureka Discovery Server
 
- ## Features
- 
+## Features
+
 - User Management:
 
   - User registration with email verification.
@@ -33,17 +34,15 @@ This project is a web-based e-commerce application backend designed to facilitat
 
 ## Project Structure
 
-The project replicates microservice architecture within a single multi-module repository for optimizing hosting resources. It is **hosted on Render.com using Docker containerization**.
+The project replicates microservice architecture . It is **hosted on Render.com using Docker containerization**.
 
-Microservices are registered in [Eureka Service Registry](https://github.com/Ecommerce-Application-Demo/service-registry)
-and can be accessed using [API Gateway](https://github.com/Ecommerce-Application-Demo/api-gateway) which implements **Circuit breaker, Rate Limiting & Load balancing**.
+Microservices can be accessed using [API Gateway](https://github.com/Ecommerce-Application-Demo/api-gateway) which implements **Circuit breaker, Rate Limiting & Load balancing**.
 
-## Swagger Documentation
+## Links of Each Repository
 
-The Swagger documentation for this project's APIs : 
-
-- [Customer Service](https://ecommerce-backend-dev.onrender.com/user/swagger-ui/index.html)
-- [Product Service](https://ecommerce-backend-dev.onrender.com/product/swagger-ui/index.html)
+### &emsp; Github Repository &emsp; ------ ------ &emsp;Swagger Documentation
+- [Customer Service Repo](https://github.com/Ecommerce-Application-Demo/ecommerce_backend-customer_service.git) &emsp;&emsp; ------ ------ &emsp;&emsp; [Customer Service Swagger](https://ecommerce-backend-dev.onrender.com/user/swagger-ui/index.html)
+- [Product Service Repo](https://github.com/Ecommerce-Application-Demo/ecommerce_backend-product_service.git) &emsp;&emsp;&emsp; ------ ------ &emsp;&emsp; [Product Service Swagger](https://ecommerce-backend-dev.onrender.com/product/swagger-ui/index.html)
 
 ## Live Website
 
