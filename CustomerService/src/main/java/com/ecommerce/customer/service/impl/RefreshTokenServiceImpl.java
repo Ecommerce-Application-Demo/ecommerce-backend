@@ -1,19 +1,20 @@
 package com.ecommerce.customer.service.impl;
 
-import java.time.Instant;
-import java.util.UUID;
 import com.ecommerce.customer.Constants;
+import com.ecommerce.customer.entity.JwtRefreshToken;
 import com.ecommerce.customer.exception.CustomerException;
+import com.ecommerce.customer.exception.ErrorCode;
 import com.ecommerce.customer.repository.RefreshTokenRepository;
 import com.ecommerce.customer.service.declaration.RefreshTokenService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import com.ecommerce.customer.entity.JwtRefreshToken;
+
+import java.time.Instant;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -28,16 +29,15 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
 	@Override
 	public String getRefreshToken(String emailDto) {
-		String email = emailDto;
-		JwtRefreshToken newToken = new JwtRefreshToken(email, UUID.randomUUID().toString(),
-				Instant.now().plusMillis(REFRESH_TOKEN_VALIDITY));
+        JwtRefreshToken newToken = new JwtRefreshToken(emailDto.toLowerCase(), UUID.randomUUID().toString(),
+				Instant.now().plusSeconds(REFRESH_TOKEN_VALIDITY));
 		refreshTokenRepository.save(newToken);
 		return newToken.getToken();
 	}
 	
 	public JwtRefreshToken retrieveTokenFromDb(String token) throws CustomerException{
 		return refreshTokenRepository.findByToken(token)
-				.orElseThrow(() -> new CustomerException("TOKEN.NOT.FOUND", HttpStatus.BAD_REQUEST));
+				.orElseThrow(() -> new CustomerException(ErrorCode.REFRESH_TOKEN_NOT_FOUND.name()));
 	}
 	
 	@Override
@@ -47,11 +47,11 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
 	@Override
 	public String tokenValidation(String token) throws CustomerException {
-		JwtRefreshToken refreshtoken=retrieveTokenFromDb(token);
-		if (refreshtoken.getExpirationDate().isAfter(Instant.now())) {
-			return refreshtoken.getEmail();
+		JwtRefreshToken refreshToken=retrieveTokenFromDb(token);
+		if (refreshToken.getExpirationDate().isAfter(Instant.now())) {
+			return refreshToken.getEmail();
 		} else {
-			throw new CustomerException("TOKEN.EXPIRED", HttpStatus.BAD_REQUEST);
+			throw new CustomerException(ErrorCode.REFRESH_TOKEN_EXPIRED.name());
 		}
 	}
 

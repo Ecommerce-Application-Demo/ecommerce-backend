@@ -12,4 +12,5 @@ public interface CustomerService {
 
 	Boolean isPresent(@NotNull String input);
 
+	String forgetpassword(String userEmail, String newPassword) throws CustomerException;
 }

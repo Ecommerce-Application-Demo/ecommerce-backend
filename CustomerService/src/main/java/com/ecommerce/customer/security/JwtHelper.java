@@ -1,24 +1,27 @@
 package com.ecommerce.customer.security;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
 import com.ecommerce.customer.entity.Customer;
 import com.ecommerce.customer.entity.CustomerAuth;
+import com.ecommerce.customer.exception.ErrorCode;
 import com.ecommerce.customer.repository.CustomerAuthRepository;
 import com.ecommerce.customer.repository.CustomerRepository;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.stereotype.Component;
+
+import java.security.Key;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 @Component
 public class JwtHelper {
@@ -59,16 +62,16 @@ public class JwtHelper {
 		final String username = extractUserName(token);
 		CustomerAuth user=customerAuthRepository.findByEmail(username).get();
 		if(!user.getIsEnabled())
-			throw new  DisabledException("User is disabled");
+			throw new  DisabledException(ErrorCode.USER_DISABLED.name());
 		Claims claims= extractAllClaims(token);
 		if(!claims.containsValue(user.getLoginSalt()))
-			throw new ExpiredJwtException(null,null,"Provided JWT is expired");
+			throw new ExpiredJwtException(null,null,ErrorCode.JWT_EXPIRED.name());
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 
 	public String generateToken(String email) {
 		Map<String, Object> claims = new HashMap<>();
-		Customer user=customerRepository.findByEmail(email).get();
+		Customer user=customerRepository.findByEmail(email.toLowerCase()).get();
 		claims.put("Name",user.getName());
 		claims.put("User Id",user.getUserId());
 		claims.put("validationKey",customerAuthRepository.findByEmail(email).get().getLoginSalt());
@@ -76,8 +79,8 @@ public class JwtHelper {
 	}
 
 	private String createToken(Map<String, Object> claims, String email) {
-		return Jwts.builder().setClaims(claims).setSubject(email).setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + JWT_VALIDITY))
+		return Jwts.builder().setClaims(claims).setSubject(email.toLowerCase()).setIssuedAt(new Date(System.currentTimeMillis()))
+				.setExpiration(new Date(System.currentTimeMillis() + JWT_VALIDITY*1000))
 				.signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
 	}
 

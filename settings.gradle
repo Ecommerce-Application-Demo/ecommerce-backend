@@ -1,3 +1,4 @@
 rootProject.name = 'Ecom'
 
 include('CustomerService')
+include('ProductService')
