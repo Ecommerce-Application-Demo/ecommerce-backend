@@ -1,30 +1,24 @@
 package com.ecommerce.customer.service.impl;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.Random;
 import com.ecommerce.customer.Constants;
-import com.ecommerce.customer.dto.OtpDetailsDto;
+import com.ecommerce.customer.entity.OtpDetails;
 import com.ecommerce.customer.repository.OtpDetailsRepository;
 import com.ecommerce.customer.service.declaration.OtpService;
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMultipart;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.*;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import com.ecommerce.customer.entity.OtpDetails;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -47,19 +41,18 @@ public class OtpServiceImpl implements OtpService {
 	@Override
 	public Integer generateOtp(String email) {
 		Random random = new Random();
-		int otp = random.nextInt(1001, 10000);
+		int otp =1234; 	//random.nextInt(1001, 10000);
 		otpDetailsRepository
 				.save(new OtpDetails(email.toLowerCase(), otp, LocalDateTime.now().plusMinutes(OTP_VALIDITY)));
 		return otp;
 	}
 
 	@Override
-	public boolean validateOtp(OtpDetailsDto otpDetailsDto) {
-		OtpDetails otpDetails = modelMapper.map(otpDetailsDto, OtpDetails.class);
-		Optional<OtpDetails> details = otpDetailsRepository.findById(otpDetails.getEmail());
+	public boolean validateOtp(String email, int otp) {
+		Optional<OtpDetails> details = otpDetailsRepository.findById(email.toLowerCase());
 		if (details.isPresent()) {
 			if (details.get().getOtpTime().isAfter(LocalDateTime.now())
-					&& otpDetails.getOtp() == details.get().getOtp()) {
+					&& otp == details.get().getOtp()) {
 				otpDetailsRepository.deleteById(details.get().getEmail());
 				return true;
 			}

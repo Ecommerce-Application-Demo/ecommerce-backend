@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 public class CustomerDto {
 
 	private int userId;
-	@NotNull(message = "Email can not be blank")
-	@Pattern(regexp = Constants.EMAIL_REGEX, message = "Email pattern does not match!")
+	@NotNull(message = "EMAIL_NOT_BLANK")
+	@Pattern(regexp = Constants.EMAIL_REGEX, message = "INVALID_EMAIL")
 	private String email;
 	@NotNull
 	private String name;
-	@NotNull(message = "Password can not be null")
-	@Pattern(regexp = Constants.PASSWORD_REGEX, message = "Password must contain 8 or more character with atleast one uppercase,lowercase,special and number character")
+	@NotNull(message = "PASSWORD_NOT_BLANK")
+	@Pattern(regexp = Constants.PASSWORD_REGEX, message = "INVALID_PASSWORD")
 	private String password;
-	@Pattern(regexp=Constants.PHONE_NUMBER_REGEX, message = "Mobile number invalid format")
+	@Pattern(regexp=Constants.PHONE_NUMBER_REGEX, message = "INVALID_MOBILE")
 	private String phoneNumber;
 	private String gender;
 

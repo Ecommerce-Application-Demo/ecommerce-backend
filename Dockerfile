@@ -1,4 +1,4 @@
-FROM gradle:8.5-jdk21-alpine AS DEPS
+FROM gradle:8.7-jdk21-alpine AS DEPS
 
 WORKDIR /app
 

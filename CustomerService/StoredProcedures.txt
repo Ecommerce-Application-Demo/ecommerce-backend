@@ -2,22 +2,19 @@ CREATE OR REPLACE PROCEDURE customer.update_email(IN oldemail character varying,
     LANGUAGE 'plpgsql'
 
 AS $BODY$
-DECLARE
-  num_deleted INT;
-  num_updated INT;
 BEGIN
   SET search_path to customer;
   -- Delete refresh tokens
   DELETE FROM jwt_refresh_token WHERE email = oldemail;
 
   -- Update customer authentication
-  UPDATE customer_authentication SET email = newemail WHERE user_id = userid;
+  UPDATE customer_authentication SET email = newemail WHERE email = oldemail;
 
   -- Update customer
-  UPDATE customer SET email=newemail WHERE user_id=userid;
+  UPDATE customer SET email=newemail WHERE email = oldemail;
 
   -- Update address and default address
-  UPDATE address SET user_id_email = newemail WHERE user_id = userid;
+  UPDATE address SET user_id_email = newemail WHERE user_id_email = oldemail;
   UPDATE default_address SET user_email = newemail WHERE user_email = oldemail;
 END;
 $BODY$;
@@ -37,6 +34,28 @@ BEGIN
 
   -- Update customer authentication
   UPDATE customer_authentication SET login_salt = salt WHERE email = useremail;
+
+END;
+$BODY$;
+
+-- ####################################################################################
+
+CREATE OR REPLACE PROCEDURE customer.delete_account(IN useremail character varying)
+    LANGUAGE 'plpgsql'
+
+AS $BODY$
+BEGIN
+
+  SET search_path to customer;
+
+  DELETE FROM jwt_refresh_token WHERE email = useremail;
+
+  DELETE FROM address WHERE user_id_email = useremail;
+  DELETE FROM default_address WHERE user_email = useremail;
+
+  DELETE FROM customer_authentication WHERE email = useremail;
+
+  DELETE FROM customer WHERE email=useremail;
 
 END;
 $BODY$;

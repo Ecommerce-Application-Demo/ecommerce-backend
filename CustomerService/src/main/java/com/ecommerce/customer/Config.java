@@ -3,7 +3,6 @@ package com.ecommerce.customer;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -24,14 +23,11 @@ public class Config {
 	      return new OpenAPI()
 	              .info(new Info().title("Customer Service")
 	              .description("JAVA Backend API Documentation for Ecommerce Customer Service")
-	              .version("v0.0.1")
+	              .version("v0.1")
 	              .license(new License().name("MIT License").url("https://opensource.org/license/mit")))
 	              .externalDocs(new ExternalDocumentation()
 	              .description("Github")
-	              .url("https://github.com/Ecommerce-Application-Demo/ecommerce-backend"))
-				  .externalDocs(new ExternalDocumentation()
-						  .description("LinkedIn")
-						  .url("https://www.linkedin.com/in/souravmazumder5"));
+	              .url("https://github.com/Ecommerce-Application-Demo/ecommerce-backend"));
 	  }
 
 }

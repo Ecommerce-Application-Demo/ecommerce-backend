@@ -12,7 +12,7 @@ public class AddressDto {
 	private int addId;
 	@NotNull
 	private String name;
-	@Pattern(regexp= Constants.PHONE_NUMBER_REGEX, message = "Mobile number invalid format")
+	@Pattern(regexp= Constants.PHONE_NUMBER_REGEX, message = "INVALID_MOBILE")
 	private String phoneNumber;
 	private String addressLine1;
 	@NotNull
