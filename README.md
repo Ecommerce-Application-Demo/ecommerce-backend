@@ -34,11 +34,15 @@ This project is a web-based e-commerce application backend designed to facilitat
   - Get product delivery time from nearest Warehouse, if deliverable at your pincode.
   - Ability to add All Categories,Product & it's Style variants.
   - Warehouse based inventory management.
+
+- ### Order Management:
+  - Add product to Cart & Wishlist, which is synced in all logged in sessions.
+  - Remove products from Cart & Wishlist.
+  - Place Order From Cart.
+  - Find order Status & history.
   
   
 - #### Planned Features:
-  - Shopping wishlist & cart functionality.
-  - Order processing and management.
   - Payment integration.
   - Return and exchange functionalities.
 
@@ -53,7 +57,7 @@ Microservices can be accessed using [API Gateway](https://github.com/Ecommerce-A
 ### &emsp; Github Repository &emsp; ------ ------ &emsp;Swagger Documentation
 - [Customer Service Repo](https://github.com/Ecommerce-Application-Demo/ecommerce_backend-customer_service.git) &emsp;&emsp; ------ ------ &emsp;&emsp; [Customer Service Swagger](https://ecommerce-backend-customer-service.onrender.com/user/swagger-ui/index.html)
 - [Product Service Repo](https://github.com/Ecommerce-Application-Demo/ecommerce_backend-product_service.git) &emsp;&emsp;&emsp; ------ ------ &emsp;&emsp; [Product Service Swagger](https://ecommerce-backend-product-service.onrender.com/product/swagger-ui/index.html)
-- [Order Service Repo](https://github.com/Ecommerce-Application-Demo/ecommerce_backend-order_service.git) &emsp;&emsp;&emsp;&emsp; ------ ------ &emsp;&emsp; [Order Service Swagger](https://ecommerce-backend-order-service.onrender.com/product/swagger-ui/index.html)
+- [Order Service Repo](https://github.com/Ecommerce-Application-Demo/ecommerce_backend-order_service.git) &emsp;&emsp;&emsp;&emsp; ------ ------ &emsp;&emsp; [Order Service Swagger](https://ecommerce-backend-order-service.onrender.com/order/swagger-ui/index.html)
 
 
 ## Live Website
