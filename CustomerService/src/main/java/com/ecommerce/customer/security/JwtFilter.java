@@ -1,8 +1,6 @@
 package com.ecommerce.customer.security;
 
 import com.ecommerce.customer.Constants;
-import com.ecommerce.customer.repository.BlockedJwtRepo;
-import com.ecommerce.customer.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,10 +20,6 @@ public class JwtFilter extends OncePerRequestFilter {
 	private JwtHelper jwtHelper;
 
 	@Autowired
-	private CustomUserDetailsService customUserDetailsService;
-	@Autowired
-    BlockedJwtRepo blockedJwt;
-	@Autowired
 	HandlerExceptionResolver handlerExceptionResolver;
 
 	@Override
@@ -41,8 +35,8 @@ public class JwtFilter extends OncePerRequestFilter {
 		}
 
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-			if (jwtHelper.validateToken(token, userDetails) && !blockedJwt.existsById(token)) {
+			UserDetails userDetails = new CustomUserDetails(username.toLowerCase());
+			if (jwtHelper.validateToken(token)) {
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, null);
 				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authToken);

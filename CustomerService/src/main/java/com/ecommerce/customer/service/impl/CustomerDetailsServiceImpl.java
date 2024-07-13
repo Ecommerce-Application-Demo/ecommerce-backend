@@ -8,15 +8,13 @@ import com.ecommerce.customer.entity.CustomerAuth;
 import com.ecommerce.customer.entity.DefaultAddress;
 import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.exception.ErrorCode;
-import com.ecommerce.customer.repository.AddressRepository;
-import com.ecommerce.customer.repository.CustomerAuthRepository;
-import com.ecommerce.customer.repository.CustomerRepository;
-import com.ecommerce.customer.repository.DefaultAddressRepository;
+import com.ecommerce.customer.repository.*;
 import com.ecommerce.customer.service.declaration.CustomerDetailsService;
 import com.ecommerce.customer.service.declaration.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -49,6 +47,10 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
     DefaultAddressRepository defaultAddressRepository;
     @Autowired
     CustomerService customerService;
+    @Autowired
+    RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    StringRedisTemplate redisTemplate;
 
     @Override
     public String getUser() throws CustomerException {
@@ -88,7 +90,18 @@ public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 
     @Override
     public Boolean invalidateAllToken() throws CustomerException {
-        customerAuthRepository.invalidateTokens(getUser(), UUID.randomUUID().toString().replace("-", ""));
+        String user = getUser().toLowerCase();
+        Set<String> keys = redisTemplate.keys("*_" + user);
+
+        if (keys != null) {
+            for (String key : keys) {
+                String value = redisTemplate.opsForValue().get(key).toString();
+                if (user.equals(value)) {
+                    redisTemplate.delete(key);
+                }
+            }
+        }
+        refreshTokenRepository.deleteByEmail(user);
         return true;
     }
 

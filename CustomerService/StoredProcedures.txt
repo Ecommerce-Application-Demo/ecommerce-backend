@@ -20,24 +20,6 @@ END;
 $BODY$;
 
 
--- #################################################################################
-
-
-CREATE OR REPLACE PROCEDURE customer.invalidate_tokens(IN useremail character varying, IN salt character varying)
-    LANGUAGE 'plpgsql'
-
-AS $BODY$
-BEGIN
-  SET search_path to customer;
-  -- Delete refresh tokens
-  DELETE FROM jwt_refresh_token WHERE email = useremail;
-
-  -- Update customer authentication
-  UPDATE customer_authentication SET login_salt = salt WHERE email = useremail;
-
-END;
-$BODY$;
-
 -- ####################################################################################
 
 CREATE OR REPLACE PROCEDURE customer.delete_account(IN useremail character varying)

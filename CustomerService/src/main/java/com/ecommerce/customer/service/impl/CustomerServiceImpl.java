@@ -7,15 +7,17 @@ import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.exception.ErrorCode;
 import com.ecommerce.customer.repository.CustomerAuthRepository;
 import com.ecommerce.customer.repository.CustomerRepository;
+import com.ecommerce.customer.repository.RefreshTokenRepository;
 import com.ecommerce.customer.service.declaration.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -32,6 +34,10 @@ public class CustomerServiceImpl implements CustomerService {
 	ModelMapper modelMapper;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	RefreshTokenRepository refreshTokenRepository;
+	@Autowired
+	StringRedisTemplate redisTemplate;
 
 	@Override
 	public void registerNewCustomer(CustomerDto customerDto) throws CustomerException {
@@ -45,7 +51,6 @@ public class CustomerServiceImpl implements CustomerService {
 			CustomerAuth customerAuth = new CustomerAuth();
 			customerAuth.setEmail(customer.getEmail().toLowerCase());
 			customerAuth.setPassword(passwordEncoder.encode(customer.getPassword()));
-			customerAuth.setLoginSalt(UUID.randomUUID().toString().replace("-",""));
 			customerAuth.setAuthCustomer(customer);
 			customerAuthRepository.save(customerAuth);
 		} else {
@@ -71,17 +76,20 @@ public class CustomerServiceImpl implements CustomerService {
 			CustomerAuth customer = customerAuthRepository.findById(email.toLowerCase()).get();
 			customer.setPassword(passwordEncoder.encode(password));
 			customerAuthRepository.save(customer);
-			customerAuthRepository.invalidateTokens(email.toLowerCase(), UUID.randomUUID().toString().replace("-", ""));
+			Set<String> keys = redisTemplate.keys("*_" + email);
+
+			if (keys != null) {
+				for (String key : keys) {
+					String value = redisTemplate.opsForValue().get(key).toString();
+					if (email.equals(value)) {
+						redisTemplate.delete(key);
+					}
+				}
+			}
+			refreshTokenRepository.deleteByEmail(email.toLowerCase());
 			return passwordSuccessMessage;
 		} catch (Exception e) {
 			throw new CustomerException(ErrorCode.PASSWORD_UPDATE_ERROR.name());
 		}
 	}
-
-//	@Profile(value = "dev")
-//	@Scheduled(fixedDelay = 1000*60*5)
-//	 void renderRunner() {
-//		RestTemplate restTemplate= new RestTemplate();
-//		restTemplate.getForEntity("https://ecommerce-backend-customer-service.onrender.com/user/api/auth/index",String.class);
-//	}
 }

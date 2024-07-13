@@ -15,7 +15,6 @@ public class CustomerAuth {
 	@Id
 	private String email;
 	private String password;
-	private String loginSalt;
 	private Boolean isEnabled=true;
 	@OneToOne
 	@JoinColumn(name = "user_id")

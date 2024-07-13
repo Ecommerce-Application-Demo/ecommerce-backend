@@ -7,6 +7,7 @@
 - Java SE 21
 - Spring Boot 3.2
 - PostgreSQL
+- Redis
 - Gradle
 - Spring REST
 - Spring Data JPA

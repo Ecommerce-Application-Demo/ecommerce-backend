@@ -1,6 +1,7 @@
 package com.ecommerce.customer.controller;
 
 import com.ecommerce.customer.dto.*;
+import com.ecommerce.customer.entity.JwtRefreshToken;
 import com.ecommerce.customer.entity.StringInput;
 import com.ecommerce.customer.exception.CustomerException;
 import com.ecommerce.customer.exception.ErrorCode;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -72,7 +74,7 @@ public class CustomerAuthController {
 	@PostMapping("/generate")
 	public ResponseEntity<String> generateEmailOtp(@RequestBody @NotNull StringInput email) throws MessagingException {
 		Integer otp = otpService.generateOtp(email.getInput());
-		//otpService.sendOtpByEmail(email.getInput(), otp.toString());
+		otpService.sendOtpByEmail(email.getInput(), otp.toString());
 		return new ResponseEntity<>(environment.getProperty("OTP.SENT") + email.getInput(), HttpStatus.OK);
 	}
 
@@ -195,13 +197,12 @@ public class CustomerAuthController {
 	@PostMapping("/jwt-token")
 	public ResponseEntity<JwtTokens> generateNewJwt(@RequestBody StringInput refreshToken) throws CustomerException {
 		String email = refreshTokenService.tokenValidation(refreshToken.getInput());
-		String newRefreshToken = refreshTokenService.getRefreshToken(email);
-		JwtTokens response= new JwtTokens(jwtHelper.generateToken(email), newRefreshToken, refreshTokenService.extractExpiration(newRefreshToken),customerService.welcomeService(email) , email);
-		refreshTokenService.deleteToken(refreshToken.getInput());
+		JwtRefreshToken timeExtendedRefreshToken = refreshTokenService.extendTokenTime(refreshToken.getInput());
+		JwtTokens response= new JwtTokens(jwtHelper.generateToken(email), timeExtendedRefreshToken.getToken(), timeExtendedRefreshToken.getExpirationDate(),customerService.welcomeService(email) , email);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	
-	
+
+	@SecurityRequirement(name = "Bearer Authentication")
 	@Operation(summary = "Welcome message for logged in user")
 	@GetMapping("/welcome")
 	public String welcome(Principal principal) {

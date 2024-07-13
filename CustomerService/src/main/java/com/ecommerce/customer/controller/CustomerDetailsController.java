@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/my")
+@SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Customer Details Controller : REST APIs")
 public class CustomerDetailsController {
 
@@ -139,7 +141,7 @@ public class CustomerDetailsController {
 	@PostMapping("/generate")
 	public ResponseEntity<String> generateEmailOtp(@RequestBody @NotNull StringInput email) throws MessagingException {
 		Integer otp = otpService.generateOtp(email.getInput());
-		//otpService.sendOtpByEmail(email.getInput(), otp.toString());
+		otpService.sendOtpByEmail(email.getInput(), otp.toString());
 		return new ResponseEntity<>(environment.getProperty("OTP.SENT") + email.getInput(), HttpStatus.OK);
 	}
 

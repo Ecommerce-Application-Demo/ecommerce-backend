@@ -41,7 +41,7 @@ public class OtpServiceImpl implements OtpService {
 	@Override
 	public Integer generateOtp(String email) {
 		Random random = new Random();
-		int otp =1234; 	//random.nextInt(1001, 10000);
+		int otp = random.nextInt(1001, 10000);
 		otpDetailsRepository
 				.save(new OtpDetails(email.toLowerCase(), otp, LocalDateTime.now().plusMinutes(OTP_VALIDITY)));
 		return otp;
@@ -111,7 +111,7 @@ public class OtpServiceImpl implements OtpService {
 						"			 font-size: 16px;\n" +
 						"        }\n" +
 						"        .otp-text {\n" +
-						"            background-color: #db4444;\n" +
+						"            background-color: #f70767;\n" +
 						"            color: white;\n" +
 						"            padding: 8px 35px;\n" +
 						"            border-radius: 4px;\n" +
@@ -126,7 +126,7 @@ public class OtpServiceImpl implements OtpService {
 						"    <p>This OTP is valid for only <b>"+ OTP_VALIDITY +"</b> minutes.</p>\n" +
 						"    <p>If you didn't sign up for an account with us, you can safely ignore this email.</p>\n" +
 						"    <p>Best Regards,\n" +
-						"    <h4 style=\"color: #db4444;\">DesiCart Team</h4>\n" +
+						"    <h4 style=\"color: #f70767;\">DesiCart Team</h4>\n" +
 						"    </p>\n" +
 						"</div>\n" +
 						"</body>\n" +

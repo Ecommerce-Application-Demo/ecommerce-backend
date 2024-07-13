@@ -46,6 +46,13 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 	}
 
 	@Override
+	public JwtRefreshToken extendTokenTime(String token) throws CustomerException {
+		JwtRefreshToken rt= retrieveTokenFromDb(token);
+		rt.setExpirationDate(Instant.now().plusSeconds(REFRESH_TOKEN_VALIDITY));
+		return refreshTokenRepository.save(rt);
+	}
+
+	@Override
 	public String tokenValidation(String token) throws CustomerException {
 		JwtRefreshToken refreshToken=retrieveTokenFromDb(token);
 		if (refreshToken.getExpirationDate().isAfter(Instant.now())) {
