@@ -1,4 +1,4 @@
-package com.ecommerce.productservice.exceptionhandler;
+package com.ecommerce.productservice.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> productException(ProductException ex) {
         ErrorCode ec = ErrorCode.valueOf(ex.getMessage());
-        ErrorResponse response = new ErrorResponse(ec.getErrorMessage(),ec.getErrorCode());
+        ErrorResponse response = new ErrorResponse(ec.getErrorMessage(),ex.getMessage(),ec.getErrorCode());
         return new ResponseEntity<>(response, HttpStatusCode.valueOf(ec.getHttpStatusCode()));
 
     }
@@ -27,8 +27,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> allOtherException(Exception ex) {
         log.error(ex.getMessage(),ex);
-        ErrorResponse response = new ErrorResponse(ErrorCode.GENERAL_EXCEPTION.getErrorMessage()
-                +". [ "+ex.getMessage()+" ]", ErrorCode.GENERAL_EXCEPTION.getErrorCode());
+        ErrorResponse response = new ErrorResponse(ErrorCode.GENERAL_EXCEPTION.getErrorMessage(),
+                ex.getMessage(), ErrorCode.GENERAL_EXCEPTION.getErrorCode());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -38,15 +38,15 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error ->{
             exception.add(error.getDefaultMessage());
         });
-        ErrorResponse response = new ErrorResponse(String.join(", ",exception),ErrorCode.PARAMETER_VALIDATION_FAILED.getErrorCode());
+        ErrorResponse response = new ErrorResponse(String.join(", ",exception),null,ErrorCode.PARAMETER_VALIDATION_FAILED.getErrorCode());
         return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST) ;
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleFormatException(HttpMessageNotReadableException ex) {
         log.error(ex.getMessage(),ex);
-        ErrorResponse response = new ErrorResponse(ErrorCode.INPUT_VALIDATION_FAILED.getErrorMessage()+". ["+
-                                                    ex.getMessage()+" ]",ErrorCode.INPUT_VALIDATION_FAILED.getErrorCode() );
+        ErrorResponse response = new ErrorResponse(ErrorCode.INPUT_VALIDATION_FAILED.getErrorMessage(),
+                ex.getMessage(),ErrorCode.INPUT_VALIDATION_FAILED.getErrorCode() );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST) ;
     }
 }

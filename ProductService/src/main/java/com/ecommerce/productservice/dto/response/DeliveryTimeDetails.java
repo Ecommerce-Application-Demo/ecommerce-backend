@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DeliveryTimeDetails{
-    private String time;
+    private String deliveryTime;
+    private String timeDuration;
     private Warehouse warehouse;
 }

@@ -13,8 +13,6 @@ public class ProductDto {
     private String productId;
     private String productName;
     private String productDescription;
-    private Float productAvgRating;
-    private Long reviewCount;
     private String gender;
     private Materials material;
     private String breadcrumbUrl;

@@ -18,8 +18,12 @@ public class StyleVariantDetailsDto {
     private String colourHexCode;
     private BigDecimal mrp;
     private BigDecimal discountPercentage;
+    private String discountPercentageText;
     private BigDecimal finalPrice;
     private Images images;
+    private Float productAvgRating;
+    private Long reviewCount;
     private List<SizeDetails> sizeDetails;
+    private String sizeDetailsImageUrl;
     private String productId;
 }

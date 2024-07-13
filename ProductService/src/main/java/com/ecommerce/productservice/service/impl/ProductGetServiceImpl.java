@@ -5,6 +5,7 @@ import com.ecommerce.productservice.dto.response.BreadCrumb;
 import com.ecommerce.productservice.dto.response.ProductResponse;
 import com.ecommerce.productservice.entity.Product;
 import com.ecommerce.productservice.entity.ReviewRating;
+import com.ecommerce.productservice.entity.warehousemanagement.Inventory;
 import com.ecommerce.productservice.entity.warehousemanagement.Warehouse;
 import com.ecommerce.productservice.repository.*;
 import com.ecommerce.productservice.service.declaration.ProductGetService;
@@ -86,7 +87,7 @@ public class ProductGetServiceImpl implements ProductGetService {
             productDto = productRepo.findProductByCategory(subCategoryName, categoryName, masterCategoryName, brand, gender).stream()
                     .map(productDto1 -> {
                         ProductResponse res = modelMapper.map(productDto1, ProductResponse.class);
-                        res.setStyleVariants(getStyleVariants(productDto1.getProductId(), null, null, null));
+                        res.setStyleVariants(getStyleVariants(productDto1.getProductId(), null));
                         breadCrumbs.addAll(getBreadCrumb(productDto1));
                         breadCrumbs.add((new BreadCrumb(productDto1.getProductName(),null)));
                         res.setBreadCrumbList(breadCrumbs);
@@ -96,7 +97,7 @@ public class ProductGetServiceImpl implements ProductGetService {
             productDto = productRepo.findProductById_Name(productName, productId).stream()
                     .map(productDto1 -> {
                         ProductResponse res = modelMapper.map(productDto1, ProductResponse.class);
-                        res.setStyleVariants(getStyleVariants(productDto1.getProductId(), null, null, null));
+                        res.setStyleVariants(getStyleVariants(productDto1.getProductId(), null));
                         getBreadCrumb(productDto1).add(new BreadCrumb(productDto1.getProductName(),null));
                         breadCrumbs.addAll(getBreadCrumb(productDto1));
                         breadCrumbs.add((new BreadCrumb(productDto1.getProductName(),null)));
@@ -108,14 +109,14 @@ public class ProductGetServiceImpl implements ProductGetService {
     }
 
     @Override
-    public List<ReviewRating> getReview(String productId) {
-        return reviewRatingRepo.findAllByProductId(productId);
+    public List<ReviewRating> getReview(String styleId) {
+        return reviewRatingRepo.findAllByStyleId(styleId);
     }
 
     @Override
-    public List<StyleVariantDetailsDto> getStyleVariants(String productId, String styleId, String size, String colour) {
+    public List<StyleVariantDetailsDto> getStyleVariants(String productId, String styleId) {
 
-        return styleVariantRepo.findStyle(productId, styleId, size, colour).stream()
+        return styleVariantRepo.findStyle(productId, styleId).stream()
                 .map(style -> {
                     style.setSizeDetails(style.getSizeDetails().stream().toList());
                     StyleVariantDetailsDto styleVariantDetailsDto1 = modelMapper.map(style, StyleVariantDetailsDto.class);
@@ -131,6 +132,11 @@ public class ProductGetServiceImpl implements ProductGetService {
         } else {
             return warehouseRepo.findAll();
         }
+    }
+
+    @Override
+    public List<Inventory> getInventory(String skuId) {
+        return inventoryRepo.findBySkuId(skuId);
     }
 
     protected List<BreadCrumb> getBreadCrumb(Product product) {

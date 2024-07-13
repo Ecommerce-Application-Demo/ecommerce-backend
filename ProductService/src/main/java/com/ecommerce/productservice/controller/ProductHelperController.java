@@ -1,10 +1,11 @@
 package com.ecommerce.productservice.controller;
 
-import com.ecommerce.productservice.dto.response.DeliveryTimeDetails;
+import com.ecommerce.productservice.dto.response.DeliveryTimeResponse;
 import com.ecommerce.productservice.entity.Images;
-import com.ecommerce.productservice.exceptionhandler.ProductException;
-import com.ecommerce.productservice.repository.PincodeRepo;
+import com.ecommerce.productservice.exception.ErrorResponse;
+import com.ecommerce.productservice.exception.ProductException;
 import com.ecommerce.productservice.service.declaration.HelperService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,10 +29,9 @@ public class ProductHelperController {
     @Autowired
     HelperService helperService;
     @Autowired
-    PincodeRepo pincodeRepo;
-    @Autowired
     Environment environment;
 
+    @Hidden
     @Operation(summary = "Returns modified image URLs with new height,width & quality")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Modified Image URLs",
@@ -53,20 +52,15 @@ public class ProductHelperController {
             @ApiResponse(responseCode = "200", description = "Array of Delivery date of the specific Size of that product, if possible " +
                     "and Warehouse info from lowest time to higher in order",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = DeliveryTimeDetails.class)) }),
-            @ApiResponse(responseCode = "404", description = "Product not available at your area",
+                            schema = @Schema(implementation = DeliveryTimeResponse.class)) }),
+            @ApiResponse(responseCode = "406", description = "Uh-oh! We can't deliver there.Try a new address!",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class))})
+                            schema = @Schema(implementation = ErrorResponse.class))})
     })
     @GetMapping("/isDeliverable")
-    public ResponseEntity delivery(@RequestParam String pincode,
-                                   @RequestParam String sizeId) {
-        List<DeliveryTimeDetails> timeDetailsList = helperService.getDeliveryAvailability(pincode,sizeId);
-        if (timeDetailsList.isEmpty()) {
-            return new ResponseEntity<>(environment.getProperty("PRODUCT_NOT_AVAILABLE_MESSAGE"), HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(timeDetailsList, HttpStatus.OK);
-        }
+    public ResponseEntity<DeliveryTimeResponse> delivery(@RequestParam String pincode,
+                                                         @RequestParam String skuId) throws ProductException {
+        return new ResponseEntity<>(helperService.getDeliveryAvailability(pincode,skuId), HttpStatus.OK);
     }
 
     @Operation(summary = "Validate given API secret")
@@ -76,9 +70,9 @@ public class ProductHelperController {
                             schema = @Schema(implementation = Boolean.class)) }),
             @ApiResponse(responseCode = "400", description = "API Secret is Invalid",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class))})
+                            schema = @Schema(implementation = ErrorResponse.class))})
     })
-    @GetMapping("/api-secret")
+    @PostMapping(value = "/api-secret", consumes = "text/plain" )
     public ResponseEntity<Boolean> apiKeyValidation(@RequestBody String apiSecret) throws ProductException {
        return new ResponseEntity<>(helperService.validateApiKey(apiSecret), HttpStatus.OK);
     }
@@ -88,5 +82,6 @@ public class ProductHelperController {
     public String index(){
         return "From Product Service";
     }
+
 }
 

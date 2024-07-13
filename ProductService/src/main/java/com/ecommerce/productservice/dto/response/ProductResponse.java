@@ -17,8 +17,6 @@ public class ProductResponse {
     private String productId;
     private String productName;
     private String productDescription;
-    private String productAvgRating;
-    private String reviewCount;
     private Gender gender;
     private Materials material;
     private String breadcrumbUrl;

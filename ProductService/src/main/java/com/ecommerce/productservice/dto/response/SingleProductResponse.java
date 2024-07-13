@@ -1,21 +1,23 @@
 package com.ecommerce.productservice.dto.response;
 
+import com.ecommerce.productservice.entity.Brand;
+import com.ecommerce.productservice.entity.Gender;
 import com.ecommerce.productservice.entity.Images;
-import lombok.AllArgsConstructor;
+import com.ecommerce.productservice.entity.Materials;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class ProductListingResponse {
-
+public class SingleProductResponse {
     private String productId;
     private String productAvgRating;
     private String reviewCount;
-    private String brandName;
+    private Brand brand;
+    private String productDescription;
+    private Gender gender;
+    private Materials material;
     private String styleId;
     private String styleName;
     private String colour;
@@ -29,4 +31,10 @@ public class ProductListingResponse {
     private boolean isNewlyAdded;
     private boolean isOnlyFewLeft;
     private boolean isInStock;
+    private boolean is14dayReturnable;
+    private boolean isCashOnDeliveryAvailable;
+    private List<BreadCrumb> breadCrumbList;
+    private List<SizeInfo> sizes;
+    private ReviewRatingResponse reviewRating;
+
 }

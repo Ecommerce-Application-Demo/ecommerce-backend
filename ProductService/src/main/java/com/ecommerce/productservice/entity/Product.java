@@ -22,8 +22,6 @@ public class Product {
 	private String productName;
 	@Column(length = 1000)
 	private String productDescription;
-	private Float productAvgRating;
-	private Long reviewCount;
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 	@JdbcTypeCode(SqlTypes.JSON)

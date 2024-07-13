@@ -2,7 +2,7 @@ package com.ecommerce.productservice.service.declaration;
 
 public interface ProductDeleteService {
 
-    void deleteSize(String sizeId);
+    void deleteSize(String skuId);
 
     void deleteStyle(String styleId);
 

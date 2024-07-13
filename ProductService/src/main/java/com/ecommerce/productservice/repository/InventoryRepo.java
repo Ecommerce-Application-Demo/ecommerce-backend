@@ -9,23 +9,25 @@ import java.util.List;
 
 public interface InventoryRepo extends ListCrudRepository<Inventory, String> {
 
-    List<Inventory> findBySizeVariantId(String sizeVariantId);
+    List<Inventory> findBySkuId(String skuId);
 
     @Modifying
     @Query(value = "UPDATE product.size_details " +
             "SET quantity = (" +
             "  SELECT SUM(quantity) " +
             "  FROM product.inventory i" +
-            "  WHERE i.size_variant_id = ?1 " +
+            "  WHERE i.sku_id = ?1 " +
             ") " +
-            "WHERE size_id = ?1",nativeQuery = true)
-    void updateQuantity(String sizeid);
+            "WHERE sku_id = ?1",nativeQuery = true)
+    void updateQuantity(String skuId);
 
      @Query(value = "SELECT SUM(quantity) " +
                     "FROM product.inventory i " +
-                    "WHERE i.size_variant_id = ?1",nativeQuery = true)
+                    "WHERE i.sku_id = ?1",nativeQuery = true)
     Integer SumQuantityBySizeVariantId(String sizeVariantId);
 
      @Modifying
-     void deleteBySizeVariantId(String sizeVariantId);
+     void deleteBySkuId(String skuId);
+
+     Inventory findByWarehouse_WarehouseIdAndSkuId(Integer warehouseId, String skuId);
 }

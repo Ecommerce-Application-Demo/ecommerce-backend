@@ -1,8 +1,10 @@
 package com.ecommerce.productservice.service.declaration;
 
 import com.ecommerce.productservice.dto.ProductFilters;
+import com.ecommerce.productservice.dto.request.ProductFilterReq;
 import com.ecommerce.productservice.dto.response.ColourInfo;
 import com.ecommerce.productservice.dto.response.ListingPageDetails;
+import com.ecommerce.productservice.dto.response.SingleProductResponse;
 import com.ecommerce.productservice.dto.response.SizeInfo;
 
 import java.util.List;
@@ -12,15 +14,17 @@ public interface ProductSearchService {
 
     List<SizeInfo> getSizes(String styleId);
 
-    Set<ColourInfo> getColours(String productId);
+    SingleProductResponse getSingleProductDetails(String styleId, String styleName);
 
-    ListingPageDetails getProductListingParameters(String masterCategoryName, String categoryName, String subCategoryName,String brand,
-                                         String gender, String colour, String size, Integer discountPercentage,
-                                         Integer minPrice, Integer maxPrice, String sortBy,Integer pageNumber, Integer pageSize);
+    ListingPageDetails getSimilarProducts(String styleId,String sortBy,Integer pageNumber,Integer productsPerPage);
 
-    ListingPageDetails getProductListingSearchString(String searchString, String sortBy, Integer page, Integer pageSize);
+    ListingPageDetails getProductListingParameters(String masterCategoryName, String categoryName, String subCategoryName, String brand,
+                                                   String gender, String colour, String size, Integer discountPercentage,
+                                                   Integer minPrice, Integer maxPrice, String sortBy, Integer pageNumber, Integer pageSize);
 
-    ProductFilters getProductFilters(String searchString);
+    ListingPageDetails getProductListingSearchString(String searchString, ProductFilterReq productFilters, String sortBy, Integer page, Integer pageSize);
 
-    ProductFilters getProductParameterFilter(String masterCategoryName, String categoryName, String subCategoryName, String brand, String gender, String colour, Integer discountPercentage);
+    ProductFilters getProductFilters(String searchString, ProductFilterReq productFilters);
+
+    Set<ColourInfo> getColours(String productId, String styleId);
 }

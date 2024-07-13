@@ -21,9 +21,9 @@ public class ProductDeleteServiceImpl implements ProductDeleteService {
     ProductRepo productRepo;
 
     @Override
-    public void deleteSize(String sizeId) {
-        inventoryRepo.deleteBySizeVariantId(sizeId);
-        styleVariantRepo.deleteSize(sizeId);
+    public void deleteSize(String skuId) {
+        inventoryRepo.deleteBySkuId(skuId);
+        styleVariantRepo.deleteSize(skuId);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ProductDeleteServiceImpl implements ProductDeleteService {
         ProductStyleVariant productStyleVariant = styleVariantRepo.findById(styleId).orElseGet(ProductStyleVariant::new);
         if(!productStyleVariant.getSizeDetails().isEmpty()) {
             productStyleVariant.getSizeDetails().forEach(sizeDetails -> {
-                inventoryRepo.deleteBySizeVariantId(sizeDetails.getSizeId());
+                inventoryRepo.deleteBySkuId(sizeDetails.getSkuId());
             });
         }
         styleVariantRepo.deleteById(styleId);

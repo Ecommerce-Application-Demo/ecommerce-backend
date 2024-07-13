@@ -1,8 +1,7 @@
 package com.ecommerce.productservice.dto;
 
-import com.ecommerce.productservice.dto.response.ColourHexCode;
-import com.ecommerce.productservice.entity.Brand;
-import com.ecommerce.productservice.entity.MasterCategory;
+import com.ecommerce.productservice.dto.response.Colours;
+import com.ecommerce.productservice.dto.response.DiscountPercentage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,13 +14,14 @@ import java.util.Set;
 @NoArgsConstructor
 public class ProductFilters {
 
-    private Set<MasterCategory> masterCategories;
-    private Set<CategoryDto> categories;
-    private Set<SubCategoryDto> subCategories;
-    private Set<Brand> brands;
-    private Set<ColourHexCode> colours;
+    private Set<String> masterCategories;
+    private Set<String> categories;
+    private Set<String> subCategories;
+    private Set<String> brands;
+    private Set<String> gender;
+    private Set<Colours> colours;
     private Set<String> sizes;
-    private Set<BigDecimal> discountPercentages;
+    private Set<DiscountPercentage> discountPercentages;
     private BigDecimal maxPrice;
     private BigDecimal minPrice;
 }

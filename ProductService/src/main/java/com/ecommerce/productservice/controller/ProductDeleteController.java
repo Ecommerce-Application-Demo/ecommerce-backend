@@ -1,11 +1,13 @@
 package com.ecommerce.productservice.controller;
 
+import com.ecommerce.productservice.exception.ErrorResponse;
 import com.ecommerce.productservice.service.declaration.ProductDeleteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 @RequestMapping("/delete")
+@SecurityRequirement(name = "apiKey")
 @Tag(name = "5. Product Delete Controller",description = "REST APIs for deleting added product style or sizes")
 public class ProductDeleteController {
 
@@ -26,11 +29,11 @@ public class ProductDeleteController {
                             schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "401", description = "API Secret is Invalid or API Secret is Invalid",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) })
+                            schema = @Schema(implementation = ErrorResponse.class)) })
     })
     @DeleteMapping("/size")
-    public String deleteSize(@RequestParam String sizeId){
-        productDeleteService.deleteSize(sizeId);
+    public String deleteSize(@RequestParam String skuId){
+        productDeleteService.deleteSize(skuId);
         return "Size deleted successfully";
     }
 
@@ -41,7 +44,7 @@ public class ProductDeleteController {
                             schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "401", description = "API Secret is Invalid or API Secret is Invalid",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) })
+                            schema = @Schema(implementation = ErrorResponse.class)) })
     })
     @DeleteMapping("/style")
     public String deleteStyle(@RequestParam String styleId){
@@ -56,7 +59,7 @@ public class ProductDeleteController {
                             schema = @Schema(implementation = String.class)) }),
             @ApiResponse(responseCode = "401", description = "API Secret is Invalid or API Secret is Invalid",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) })
+                            schema = @Schema(implementation = ErrorResponse.class)) })
     })
     @DeleteMapping("/product")
     public String deleteProduct(@RequestParam String productId){

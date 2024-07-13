@@ -1,13 +1,12 @@
 package com.ecommerce.productservice.service.impl;
 
 import com.ecommerce.productservice.dto.*;
-import com.ecommerce.productservice.dto.request.CategoryRequest;
-import com.ecommerce.productservice.dto.request.ProductRequest;
-import com.ecommerce.productservice.dto.request.StyleVariantRequest;
-import com.ecommerce.productservice.dto.request.SubCategoryRequest;
+import com.ecommerce.productservice.dto.request.*;
 import com.ecommerce.productservice.entity.*;
 import com.ecommerce.productservice.entity.warehousemanagement.Inventory;
 import com.ecommerce.productservice.entity.warehousemanagement.Warehouse;
+import com.ecommerce.productservice.exception.ErrorCode;
+import com.ecommerce.productservice.exception.ProductException;
 import com.ecommerce.productservice.repository.*;
 import com.ecommerce.productservice.service.declaration.ProductAddService;
 import jakarta.transaction.Transactional;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +50,7 @@ public class ProductAddServiceImpl implements ProductAddService {
     public MasterCategoryDto addMasterCategory(MasterCategoryDto masterCategoryDto) {
         MasterCategory masterCategory = modelMapper.map(masterCategoryDto, MasterCategory.class);
         masterCategory.setMasterCategoryId(UUID.randomUUID().toString());
+        masterCategory.setMcBreadcrumbUrl(masterCategoryDto.getBreadcrumbUrl());
          return modelMapper.map(masterCategoryRepo.save(masterCategory), MasterCategoryDto.class);
     }
 
@@ -57,6 +58,7 @@ public class ProductAddServiceImpl implements ProductAddService {
     public CategoryDto addCategory(CategoryRequest categoryRequest) {
         Category category = modelMapper.map(categoryRequest, Category.class);
         category.setCategoryId(UUID.randomUUID().toString());
+        category.setCBreadcrumbUrl(categoryRequest.getBreadcrumbUrl());
         return modelMapper.map(categoryRepo.save(category), CategoryDto.class) ;
     }
 
@@ -64,6 +66,7 @@ public class ProductAddServiceImpl implements ProductAddService {
     public SubCategoryDto addSubCategory(SubCategoryRequest subCategoryDto) {
         SubCategory subCategory = modelMapper.map(subCategoryDto, SubCategory.class);
         subCategory.setSubCategoryId(UUID.randomUUID().toString());
+        subCategory.setScBreadcrumbUrl(subCategoryDto.getBreadcrumbUrl());
         return modelMapper.map(subCategoryRepo.save(subCategory),SubCategoryDto.class);
     }
 
@@ -77,41 +80,47 @@ public class ProductAddServiceImpl implements ProductAddService {
     @Override
     public ProductDto addProduct(ProductRequest productDto) {
         Product product=modelMapper.map(productDto, Product.class);
-
-        product.setProductAvgRating(reviewRatingRepo.findAvgRating(product.getProductId()));
-        product.setReviewCount(reviewRatingRepo.findCountByProductId(product.getProductId()));
         product.setCreatedTimestamp(LocalDateTime.now());
         product=productRepo.save(product);
         return modelMapper.map(product, ProductDto.class);
     }
 
     @Override
-    public ReviewRating addReview(ReviewRating reviewRating){
-        ReviewRating reviewRatingResponse=new ReviewRating();
-        Product product=productRepo.findById(reviewRating.getProductId()).orElse(null);
-        if( product != null) {
+    public ReviewRating addReview(ReviewRating reviewRating) throws ProductException {
+        ReviewRating reviewRatingResponse;
+        ProductStyleVariant psv=styleVariantRepo.findById(reviewRating.getStyleId()).orElse(null);
+        if( psv != null) {
+            reviewRating.setCreatedTimestamp(LocalDateTime.now());
             reviewRatingResponse = reviewRatingRepo.save(reviewRating);
-            product.setProductAvgRating(reviewRatingRepo.findAvgRating(product.getProductId()));
-            product.setReviewCount(reviewRatingRepo.findCountByProductId(product.getProductId()));
-            productRepo.save(product);
+            psv.setProductAvgRating(reviewRatingRepo.findAvgRating(psv.getStyleId()));
+            psv.setReviewCount(reviewRatingRepo.findCountByStyleId(psv.getStyleId()));
+            styleVariantRepo.save(psv);
+            return reviewRatingResponse;
+        }else {
+            throw new ProductException(ErrorCode.INVALID_STYLE_ID.name());
         }
-        return reviewRatingResponse;
     }
 
     @Override
-    public ProductStyleVariant addStyleVariant(StyleVariantRequest request){
+    public StyleVariantDetailsDto addStyleVariant(StyleVariantRequest request){
 
-        ProductStyleVariant productStyleVariant = modelMapper.map(request, ProductStyleVariant.class);
-        productStyleVariant.setProduct(productRepo.findById(request.getProductId()).get());
+        ProductStyleVariant psv = modelMapper.map(request, ProductStyleVariant.class);
+        psv.setProduct(productRepo.findById(request.getProductId()).get());
 
-        BigDecimal finalPrice = productStyleVariant.getMrp().subtract(productStyleVariant.getDiscountPercentage().multiply(productStyleVariant.getMrp()).divide(new BigDecimal(100), MathContext.DECIMAL128));
-        productStyleVariant.setFinalPrice(finalPrice);
+        psv.setProductAvgRating(reviewRatingRepo.findAvgRating(psv.getStyleId()));
+        psv.setReviewCount(reviewRatingRepo.findCountByStyleId(psv.getStyleId()));
+        BigDecimal finalPrice = psv.getMrp().subtract(psv.getDiscountPercentage().multiply(psv.getMrp()).divide(new BigDecimal(100), MathContext.DECIMAL128));
+        psv.setFinalPrice(finalPrice);
+        if(psv.getDiscountPercentage().intValue()>0)
+            psv.setDiscountPercentageText(psv.getDiscountPercentage().intValue() + "% OFF");
+        else
+            psv.setDiscountPercentageText(null);
 
-        productStyleVariant.setCreatedTimeStamp(LocalDateTime.now());
-        ProductStyleVariant response= styleVariantRepo.save(productStyleVariant);
+        psv.setCreatedTimeStamp(LocalDateTime.now());
+        ProductStyleVariant response= styleVariantRepo.save(psv);
 
-        response.getSizeDetails().forEach(svd -> svd.setSizeId(response.getStyleId()+"_"+svd.getSize()));
-        return styleVariantRepo.save(response);
+        response.getSizeDetails().forEach(svd -> svd.setSkuId(response.getStyleId()+"_"+svd.getSize()));
+        return modelMapper.map(styleVariantRepo.save(response),StyleVariantDetailsDto.class);
     }
 
     @Override
@@ -120,9 +129,20 @@ public class ProductAddServiceImpl implements ProductAddService {
     }
 
     @Override
-    public List<Inventory> addInventory(List<Inventory> inventory){
-        inventory=inventoryRepo.saveAll(inventory);
-        inventory.forEach(inv -> inventoryRepo.updateQuantity(inv.getSizeVariantId()) );
-        return  inventory;
+    public List<Inventory> addInventory(List<InventoryReq> inventory){
+        List<Inventory> inventoryList = new ArrayList<>();
+        inventory.forEach(inv -> {
+            if(inventoryRepo.findByWarehouse_WarehouseIdAndSkuId(inv.warehouseId(),inv.skuId())==null)
+                    warehouseRepo.findById(inv.warehouseId()).ifPresent(
+                            warehouse -> inventoryList.add(new Inventory(null, inv.skuId(), warehouse, inv.quantity())));
+                }
+            );
+        return inventoryRepo.saveAll(inventoryList).stream()
+                .peek(inv-> inventoryRepo.updateQuantity(inv.getSkuId())).toList();
+    }
+
+    @Override
+    public Inventory editInventory(Inventory inventory){
+        return inventoryRepo.save(inventory);
     }
 }

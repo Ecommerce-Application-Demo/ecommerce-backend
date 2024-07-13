@@ -1,7 +1,7 @@
 package com.ecommerce.productservice.interceptor;
 
-import com.ecommerce.productservice.exceptionhandler.ErrorCode;
-import com.ecommerce.productservice.exceptionhandler.ProductException;
+import com.ecommerce.productservice.exception.ErrorCode;
+import com.ecommerce.productservice.exception.ProductException;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Collections;

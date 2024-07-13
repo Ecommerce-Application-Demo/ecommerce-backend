@@ -15,9 +15,11 @@ public class StyleVariantRequest {
     private String styleId;
     private String styleName;
     private String colour;
+    private String colourHexCode;
     private BigDecimal mrp;
     private BigDecimal discountPercentage;
     private Images images;
     private List<SizeDetails> sizeDetails;
+    private String sizeDetailsImageUrl;
     private String productId;
 }

@@ -25,6 +25,7 @@ public class ProductStyleVariant {
 	private String colourHexCode;
 	private BigDecimal mrp;
 	private BigDecimal discountPercentage;
+	private String discountPercentageText;
 	private BigDecimal finalPrice;
 	@ElementCollection
 	@CollectionTable(name = "size_details",joinColumns = @JoinColumn(name ="psv_id"))
@@ -33,7 +34,8 @@ public class ProductStyleVariant {
 	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(columnDefinition = "jsonb")
 	private Images images;
-	private String productBreadcrumbUrl;
+	private Float productAvgRating;
+	private Long reviewCount;
 	private LocalDateTime createdTimeStamp;
 	@ManyToOne
 	@JoinColumn(name = "psv_product")

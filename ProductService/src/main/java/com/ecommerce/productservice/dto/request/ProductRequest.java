@@ -20,7 +20,6 @@ public class ProductRequest {
     private String productName;
     @NotNull(message = "Must provide Product Description")
     private String productDescription;
-    private String productAvgRating;
     @NotNull(message = "Must provide Gender")
     private Gender gender;
     @NotNull(message = "Must provide Product material")
