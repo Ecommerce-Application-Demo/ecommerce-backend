@@ -185,10 +185,15 @@ public class ProductSearchServiceImpl implements ProductSearchService {
                 productFilterReq.getMinPrice(), productFilterReq.getMaxPrice());
         ProductFilters productFilters = modelMapper.map(filters, ProductFilters.class);
         Gson gson = new Gson();
-        productFilters.setColours(gson.fromJson(filters.get("colours").toString(), new TypeToken<Set<Colours>>() {
-        }.getType()));
-        productFilters.setDiscountPercentages(gson.fromJson(filters.get("discount").toString(), new TypeToken<Set<DiscountPercentage>>() {
-        }.getType()));
+        try {
+            productFilters.setColours(gson.fromJson(filters.get("colours").toString(), new TypeToken<Set<Colours>>() {
+            }.getType()));
+            productFilters.setDiscountPercentages(gson.fromJson(filters.get("discount").toString(), new TypeToken<Set<DiscountPercentage>>() {
+            }.getType()));
+        }catch (NullPointerException e){
+            productFilters.setColours(null);
+            productFilters.setDiscountPercentages(null);
+        }
 
 //        if (latestAppliedFilter != null && !latestAppliedFilter.isEmpty()) {
 //            Set<String> s = latestAppliedFilter.keySet();

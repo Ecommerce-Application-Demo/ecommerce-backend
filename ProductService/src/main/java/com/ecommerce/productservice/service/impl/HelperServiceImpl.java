@@ -34,16 +34,6 @@ public class HelperServiceImpl implements HelperService {
 
     private static final double EARTH_RADIUS_KM = 6371;
 
-    @Override
-    public Map<String, String> imageResizer(Map<String, String> image, int newHeight, int newQuality, int newWidth) {
-
-        Map<String, String> responseImages = new LinkedHashMap<>();
-        image.forEach((key, value) -> {
-            if (value != null)
-                responseImages.put(key, modifyURL(value, newHeight, newQuality, newWidth));
-        });
-        return responseImages;
-    }
 
     @Override
     public DeliveryTimeResponse getDeliveryAvailability(String pincode, String skuId) throws ProductException {
@@ -140,17 +130,6 @@ public class HelperServiceImpl implements HelperService {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double distance = Math.round(EARTH_RADIUS_KM * c);
         return (float) (distance + distance * ((double) 20 / 100));
-    }
-
-    public String modifyURL(String originalURL, int newHeight, int newQuality, int newWidth) {
-        // Regular expression to find and replace height, quality, and width
-        String regex = "h_\\d+,\\s*q_\\d+,\\s*w_\\d+";
-
-        // Replacement string with dynamic values
-        String replacement = String.format("h_%d,q_%d,w_%d", newHeight, newQuality, newWidth);
-
-        // Replace the matched pattern with the replacement
-        return originalURL.replaceAll(regex, replacement);
     }
 }
 

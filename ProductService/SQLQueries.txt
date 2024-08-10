@@ -16,65 +16,13 @@ SET searchable_text = to_tsvector('english',
 FROM product.product p
 WHERE psv.psv_product = p.product_id;
 
--- ########################### Update Trigger ##########################
-CREATE OR REPLACE FUNCTION update_searchable_text()
-RETURNS TRIGGER AS $$
-BEGIN
-  IF TG_TABLE_NAME = 'product_style_variant' THEN
-    NEW.searchable_text := to_tsvector('english',
-      NEW.product_name || ' ' ||
-      NEW.product_category || ' ' ||
-      NEW.product_master_category || ' ' ||
-      COALESCE(NEW.product_sub_category, '') || ' ' ||
-      NEW.product_brand || ' ' ||
-      NEW.material || ' ' ||
-      NEW.gender || ' ' ||
-      NEW.product_description || ' ' ||
-      COALESCE(NEW.colour, ''));
-    RETURN NEW;
-  ELSIF TG_TABLE_NAME = 'product' THEN
-    UPDATE product_style_variant
-    SET searchable_text = to_tsvector('english',
-      NEW.product_name || ' ' ||
-      NEW.product_category || ' ' ||
-      NEW.product_master_category || ' ' ||
-      COALESCE(NEW.product_sub_category, '') || ' ' ||
-      NEW.product_brand || ' ' ||
-      NEW.material || ' ' ||
-      NEW.gender || ' ' ||
-      NEW.product_description || ' ' ||
-      COALESCE(colour, ''))
-    WHERE psv_product = NEW.product_id;
-    RETURN NEW;
-  END IF;
-  RETURN NULL;
-END;
-$$ LANGUAGE plpgsql;
-
--- Trigger for product_style_variant table
-CREATE TRIGGER update_searchable_text_trigger
-AFTER INSERT OR UPDATE ON product.product_style_variant
-FOR EACH ROW EXECUTE FUNCTION update_searchable_text();
-
--- Trigger for product table
-CREATE TRIGGER update_searchable_text_product_trigger
-AFTER INSERT OR UPDATE ON product.product
-FOR EACH ROW EXECUTE FUNCTION update_searchable_text();
-
 
 -- ############################## Indexes ################################
 CREATE INDEX idx_searchable_text ON product.product_style_variant USING gin(searchable_text);
-CREATE INDEX idx_product_style_variant_product_id ON product.product_style_variant (psv_product);
-CREATE INDEX idx_product_product_id ON product.product (product_id);
-CREATE INDEX idx_size_details_style_id ON product.size_details (psv_id);
 CREATE INDEX idx_product_master_category ON product.product (product_master_category);
 CREATE INDEX idx_product_category ON product.product (product_category);
-CREATE INDEX idx_product_sub_category ON product.product (product_sub_category);
 CREATE INDEX idx_product_brand ON product.product (product_brand);
 CREATE INDEX idx_product_gender ON product.product (gender);
 CREATE INDEX idx_product_style_variant_colour ON product.product_style_variant (colour);
 CREATE INDEX idx_size_details_size ON product.size_details (size);
-CREATE INDEX idx_product_style_variant_discount ON product.product_style_variant (discount_percentage);
-CREATE INDEX idx_product_style_variant_final_price ON product.product_style_variant (final_price);
-CREATE INDEX idx_product_style_variant_id ON product.product_style_variant (style_id);
 
