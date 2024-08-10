@@ -19,7 +19,7 @@
 - User Management:
 
   - User registration with email verification.
-  - Login and logout functionalities.
+  - Login and logout functionalities using JWT.
   - Secure user profile and address management.
   - Email-based OTP verification for added security.
   - Multi-device logout for user account protection.
@@ -29,7 +29,15 @@
 
 The project replicates microservice architecture . It is **hosted on Render.com using Docker containerization**.
 
+This service use **PostgreSQL** for data storing and **Redis** for sessions.
+![CustomerServiceDatabaseDesign.png](CustomerServiceDatabaseDesign.png)
+
+This Project has a code coverage of **93%** and is tested using JUnit and Mockito.
+
+![Jacoco Code Coverage&quot;](JacocoCodeCoverage.png)
+
 Microservices can be accessed using [API Gateway](https://github.com/Ecommerce-Application-Demo/api-gateway) which implements **Circuit breaker, Rate Limiting & Load balancing**.
+
 
 ## Swagger Documentation
 

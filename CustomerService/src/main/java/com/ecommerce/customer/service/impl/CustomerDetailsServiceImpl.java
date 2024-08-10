@@ -31,7 +31,7 @@ import java.util.Set;
 public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 
     @Value("${PASSWORD.UPDATE.SUCCESS}")
-    String passwordSuccessMessage;
+    public String passwordSuccessMessage;
 
     @Autowired
     CustomerRepository customerRepository;

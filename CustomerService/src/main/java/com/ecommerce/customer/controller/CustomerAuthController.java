@@ -103,6 +103,35 @@ public class CustomerAuthController {
 		}
 	}
 
+	@Operation(summary = "To validate Otp for email validation V2")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "OTP successfully validated & User is already registered.",
+					content = { @Content(mediaType = "application/json",
+							schema = @Schema(implementation = OtpValidationResponse.class)) }),
+			@ApiResponse(responseCode = "200", description = "OTP successfully validated but User is not registered.",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = OtpValidationResponse.class))),
+			@ApiResponse(responseCode = "400", description = "OTP is invalid or expired.",
+					content = @Content(mediaType = "application/json",
+							schema = @Schema(implementation = ErrorResponse.class))) })
+	@PostMapping("/v2/validate")
+	public ResponseEntity validateEmailOtpV2(@RequestBody OtpDetailsDto otpDetailsDto) throws CustomerException {
+		boolean validated = otpService.validateOtp(otpDetailsDto.getEmail(),otpDetailsDto.getOtp());
+		if (validated) {
+			if(customerService.isPresent(otpDetailsDto.getEmail())) {
+				String jwtToken = jwtHelper.generateToken(otpDetailsDto.getEmail());
+				String refreshToken = refreshTokenService.getRefreshToken(otpDetailsDto.getEmail());
+				JwtTokens tokens= new JwtTokens(jwtToken, refreshToken,refreshTokenService.extractExpiration(refreshToken),customerService.welcomeService(otpDetailsDto.getEmail()),otpDetailsDto.getEmail());
+				return new ResponseEntity<>(new OtpValidationResponse(true,true,tokens), HttpStatus.OK);
+			}else {
+				return new ResponseEntity<>(new OtpValidationResponse(true,false,null), HttpStatus.OK);
+			}
+		} else {
+			throw new CustomerException(ErrorCode.INVALID_OTP.name());
+		}
+	}
+
+
 
 	@Operation(summary = "Register a new customer")
 	@ApiResponses(value = {
@@ -213,6 +242,7 @@ public class CustomerAuthController {
 	@Operation(summary = "Index unauthenticated api for testing")
 	@GetMapping("/index")
 	public String index() {
+		customerService.redisKeepAlive();
 		return "Welcome to Ecommerce Application!";
 	}
 }

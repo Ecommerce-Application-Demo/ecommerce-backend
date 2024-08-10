@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,8 +34,6 @@ public class OtpServiceImpl implements OtpService {
 	ModelMapper modelMapper;
 	@Autowired
 	JavaMailSenderImpl mailSender;
-	@Autowired
-	ResourceLoader resourceLoader;
 
 	@Override
 	public Integer generateOtp(String email) {

@@ -24,7 +24,7 @@ import java.util.Set;
 public class CustomerServiceImpl implements CustomerService {
 
 	@Value("${PASSWORD.UPDATE.SUCCESS}")
-	String passwordSuccessMessage;
+	public String passwordSuccessMessage;
 
 	@Autowired
     CustomerRepository customerRepository;
@@ -91,5 +91,11 @@ public class CustomerServiceImpl implements CustomerService {
 		} catch (Exception e) {
 			throw new CustomerException(ErrorCode.PASSWORD_UPDATE_ERROR.name());
 		}
+	}
+
+	@Override
+	public void redisKeepAlive() {
+		redisTemplate.hasKey("a");
+
 	}
 }
