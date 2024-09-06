@@ -26,8 +26,8 @@ public class JwtHelper {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public String extractUserName(String token) {
-        return extractClaim(token, Claims::getSubject);
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("User Id", Integer.class).toString());
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

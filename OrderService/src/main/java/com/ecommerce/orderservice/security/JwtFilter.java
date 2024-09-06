@@ -1,5 +1,6 @@
 package com.ecommerce.orderservice.security;
 
+import com.ecommerce.orderservice.Constants;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,17 +25,17 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try{
-            String authHeader = request.getHeader("Authorization");
+            String authHeader = request.getHeader(Constants.JWT_HEADER_NAME);
             String token = null;
-            String username = null;
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String userId = null;
+            if (authHeader != null && authHeader.startsWith(Constants.JWT_BEARER_TEXT)) {
                 token = authHeader.substring(7);
-                username = jwtHelper.extractUserName(token);
+                userId = jwtHelper.extractUserId(token);
 
             }
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = new CustomUserDetails(username.toLowerCase());
+            if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = new CustomUserDetails(userId.toLowerCase());
                 if (jwtHelper.validateToken(token)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, null);
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

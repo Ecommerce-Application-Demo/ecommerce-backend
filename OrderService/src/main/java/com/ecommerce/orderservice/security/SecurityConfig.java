@@ -9,6 +9,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -31,7 +32,7 @@ public class SecurityConfig {
     String[] publicURL= {
             "/actuator/**",
             "/v3/api-docs","/swagger-ui/**","/swagger-ui.html","/swagger-resources/**","/v3/api-docs/**",
-            "/swagger-ui/**","/swagger-ui/","/swagger-ui"
+            "/swagger-ui/**","/swagger-ui/","/swagger-ui","/cart/**"
     };
 
     @Bean
@@ -43,12 +44,17 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         return http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(req -> req.requestMatchers("/*").authenticated()
+                .authorizeHttpRequests(req -> req.requestMatchers("/**").authenticated()
                         .requestMatchers(publicURL).permitAll())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web->web.ignoring().requestMatchers(publicURL);
     }
 
     @Bean

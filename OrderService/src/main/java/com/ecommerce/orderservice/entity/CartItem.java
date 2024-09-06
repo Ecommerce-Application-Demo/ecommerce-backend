@@ -1,9 +1,7 @@
 package com.ecommerce.orderservice.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,11 +13,14 @@ import lombok.NoArgsConstructor;
 public class CartItem {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String cartItemId;
     private String skuId;
     private int quantity;
+    private Boolean isSelected = true;
     @ManyToOne
     @JoinColumn(name = "cart_id")
+    @JsonIgnore
     private Cart cartId;
 
 }

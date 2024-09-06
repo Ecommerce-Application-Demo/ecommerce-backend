@@ -16,7 +16,9 @@ public enum ErrorCode {
     INVALID_ADDRESS_ID(400,132,"Given address is not valid."),
 
     INVALID_MOBILE(400,133,"Given mobile number is in invalid format."),
-    INVALID_EMAIL(400,134,"Given email is in invalid format.");
+    INVALID_EMAIL(400,134,"Given email is in invalid format."),
+
+    ERROR_WHILE_FETCHING_WISHLIST(500,140,"Error while fetching wishlist.");
 
     private final int httpStatusCode;
     private final int errorCode;

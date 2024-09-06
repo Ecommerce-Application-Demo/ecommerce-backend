@@ -2,13 +2,17 @@ package com.ecommerce.orderservice.service.declaration;
 
 import com.ecommerce.orderservice.entity.WishlistItems;
 
+import java.util.List;
+
 public interface WishlistService {
 
-    public WishlistItems addToWishlist(String userId, String styleId);
+    WishlistItems addToWishlist(String styleId);
 
-    public String removeFromWishlist(String userId, String styleId);
+    void removeFromWishlist(String styleId);
 
-    public String getWishlist(String userId);
+    List getWishlist();
 
-    public String moveToCart(String userId, String styleId);
+    List<String> getWishlistList();
+
+    String moveToCart(String styleId);
 }

@@ -10,14 +10,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@Validated
 @RequestMapping("/wishlist")
 @SecurityRequirement(name = "Bearer Authentication")
 @Tag(name = "Wishlist Controller", description = "REST APIs for Adding Products to Wishlist.")
@@ -28,13 +28,47 @@ public class WishlistController {
 
     @Operation(summary = "Add product to wishlist")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Found the book",
+            @ApiResponse(responseCode = "200", description = "Added product to wishlist",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = WishlistItems.class))})
     })
-    @PostMapping
-    public WishlistItems addToWishlist(String userId, String styleId) {
-        return wishListService.addToWishlist(userId, styleId);
+    @PostMapping("/add")
+    public WishlistItems addToWishlist(@RequestParam String styleId) {
+        return wishListService.addToWishlist(styleId);
+    }
+
+    @Operation(summary = "Remove product from wishlist")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Removed product from wishlist",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = WishlistItems.class))})
+    })
+    @DeleteMapping("/remove")
+    public ResponseEntity<String> removeFromWishlist(String styleId) {
+        wishListService.removeFromWishlist(styleId);
+        return new ResponseEntity<>("Removed product from wishlist",HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get product details of wishlist")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Wishlist with product details",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ArrayList.class))})
+    })
+    @GetMapping("/details")
+    public ResponseEntity<List> getWishlistDetails(){
+        return new ResponseEntity<>(wishListService.getWishlist(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Get style Ids of wishlist")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Wishlist styleIds",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = ArrayList.class))})
+    })
+    @GetMapping("/list")
+    public ResponseEntity<List<String>> getWishlistList(){
+        return new ResponseEntity<>(wishListService.getWishlistList(), HttpStatus.OK);
     }
 
     @Operation(summary = "Authenticated index API")

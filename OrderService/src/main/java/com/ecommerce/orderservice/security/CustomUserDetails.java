@@ -1,5 +1,6 @@
 package com.ecommerce.orderservice.security;
 
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -7,6 +8,7 @@ import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 
+@ToString
 public class CustomUserDetails implements UserDetails {
 
     /**
@@ -17,7 +19,6 @@ public class CustomUserDetails implements UserDetails {
 
     private String email;
     private String password;
-    private Boolean isEnabled;
 
     public CustomUserDetails(String email) {
         this.email = email;
@@ -55,7 +56,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isEnabled;
+        return true;
     }
 
 }
