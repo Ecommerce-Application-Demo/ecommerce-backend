@@ -1,8 +1,9 @@
 package com.ecommerce.customer;
 
 public class Constants {
-	
-	public static final String JWT_HEADER_PREFIX = "Bearer ";
+
+	public static final String JWT_BEARER_TEXT= "Bearer ";
+	public static final String JWT_HEADER_NAME= "Authorization";
 	
 	/**
 	 *  DB cleanup process in Cron.

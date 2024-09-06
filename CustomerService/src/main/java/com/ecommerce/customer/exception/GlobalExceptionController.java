@@ -70,7 +70,7 @@ public class GlobalExceptionController {
 	
 	@ExceptionHandler
 	public ResponseEntity<ErrorResponse> expiredJwtException(ExpiredJwtException ex) {
-		ErrorCode ec = ErrorCode.valueOf(ex.getMessage());
+		ErrorCode ec = ErrorCode.JWT_EXPIRED;
 		ErrorResponse response = new ErrorResponse(ec.getErrorMessage(),null,ec.getErrorCode());
 		return new ResponseEntity<>(response, HttpStatusCode.valueOf(ec.getHttpStatusCode()));
 	}

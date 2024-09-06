@@ -23,6 +23,7 @@ configurations {
 
 ext {
 	jwtVersion = '0.11.5'
+	springCloudVersion = '2023.0.3'
 }
 
 dependencies {
@@ -34,6 +35,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-mail:3.2.3'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.modelmapper:modelmapper:3.2.0'
 	implementation 'org.springframework.boot:spring-boot-starter-mail:3.2.1'
 	implementation 'io.jsonwebtoken:jjwt-api:' + jwtVersion
@@ -44,6 +46,12 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 jacocoTestReport {
