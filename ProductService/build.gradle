@@ -21,12 +21,17 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2023.0.3")
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator:3.2.3'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.apache.commons:commons-text:1.12.0'
 	implementation 'com.google.code.gson:gson:2.11.0'
 	implementation 'org.modelmapper:modelmapper:3.2.0'
@@ -34,6 +39,12 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
 }
 
 jacocoTestReport {

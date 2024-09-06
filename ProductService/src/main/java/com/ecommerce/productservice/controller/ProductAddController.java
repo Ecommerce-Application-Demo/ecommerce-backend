@@ -18,7 +18,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -35,8 +34,6 @@ public class ProductAddController {
 
     @Autowired
     ProductAddService productService;
-    @Autowired
-    Environment environment;
 
     @Operation(summary = "To add Master Category")
     @ApiResponses(value = {

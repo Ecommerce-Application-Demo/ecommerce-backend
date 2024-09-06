@@ -40,6 +40,8 @@ public class ProductAddServiceImpl implements ProductAddService {
     @Autowired
     StyleVariantRepo styleVariantRepo;
     @Autowired
+    SizeDetailsRepo sizeDetailsRepo;
+    @Autowired
     InventoryRepo inventoryRepo;
     @Autowired
     WarehouseRepo warehouseRepo;
@@ -119,8 +121,12 @@ public class ProductAddServiceImpl implements ProductAddService {
         psv.setCreatedTimeStamp(LocalDateTime.now());
         ProductStyleVariant response= styleVariantRepo.save(psv);
 
-        response.getSizeDetails().forEach(svd -> svd.setSkuId(response.getStyleId()+"_"+svd.getSize()));
-        return modelMapper.map(styleVariantRepo.save(response),StyleVariantDetailsDto.class);
+        response.getSizeDetails().forEach(svd -> {
+            svd.setSkuId(response.getStyleId() + "_" + svd.getSize());
+            svd.setPsv_id(response);
+        });
+        sizeDetailsRepo.saveAll(response.getSizeDetails());
+        return modelMapper.map(styleVariantRepo.findById(psv.getStyleId()),StyleVariantDetailsDto.class);
     }
 
     @Override

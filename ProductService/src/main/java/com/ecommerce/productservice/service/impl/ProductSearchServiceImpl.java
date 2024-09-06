@@ -133,7 +133,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         }
 
         if (styleVariants.hasContent()) {
-            return new ListingPageDetails(getListingPageDetails(styleVariants), breadCrumbs, styleVariants.getTotalPages(),
+            return new ListingPageDetails(getListingPageDetails(styleVariants.toList()), breadCrumbs, styleVariants.getTotalPages(),
                     styleVariants.getNumber() + 1, styleVariants.getTotalElements(), styleVariants.getNumberOfElements(),
                     styleVariants.hasNext());
         }
@@ -142,7 +142,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         return new ListingPageDetails(null,breadCrumbs,0,0,0,0,false);
     }
 
-    private List<ProductListingResponse> getListingPageDetails(Page<ProductStyleVariant> styleVariants) {
+    List<ProductListingResponse> getListingPageDetails(List<ProductStyleVariant> styleVariants) {
         List<ProductListingResponse> productListingResponse = new ArrayList<>();
 
         styleVariants.forEach(styleVariant -> {
@@ -309,7 +309,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         }
         if (styleVariants.hasContent()) {
             Product product = styleVariants.stream().findFirst().get().getProduct();
-            return new ListingPageDetails(getListingPageDetails(styleVariants), productGetService.getBreadCrumb(product),
+            return new ListingPageDetails(getListingPageDetails(styleVariants.toList()), productGetService.getBreadCrumb(product),
                     styleVariants.getTotalPages(), styleVariants.getNumber() + 1, styleVariants.getTotalElements(),
                     styleVariants.getNumberOfElements(), styleVariants.hasNext());
         }

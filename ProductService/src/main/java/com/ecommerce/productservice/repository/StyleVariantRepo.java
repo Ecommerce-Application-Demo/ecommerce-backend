@@ -18,6 +18,10 @@ public interface StyleVariantRepo extends JpaRepository<ProductStyleVariant, Str
     ProductStyleVariant findSingleStyle(String styleId, String styleName);
 
     @Query(value = "SELECT s.* FROM product.product_style_variant s " +
+            "WHERE s.style_id = ANY(CAST(?1 AS text[])) OR CAST(?1 AS text[]) IS NULL ", nativeQuery = true)
+    List<ProductStyleVariant> findStyleList(String[] styleId);
+
+    @Query(value = "SELECT s.* FROM product.product_style_variant s " +
             "LEFT OUTER JOIN product.product p ON s.psv_product = p.product_id " +
             "WHERE (?1 IS NULL OR p.product_id = ?1) " +
             "AND (?2 IS NULL OR s.style_id = ?2 ) " +
